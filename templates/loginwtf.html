@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block cuerpo %}
+    <section class = "todo">
+    <div class = "container" style="background-color: white; width: auto;">
+            <div class="row">
+                <div class="col-md-5">
+                        <div class="form-top">
+                            <div class="form-top-left" style="padding: 5%;">
+                                <h3 style=>Inicia Sesión</h3>
+                                <p style="text-align: center;">Ingresa Usuario y Contraseña</p>
+                            </div>
+                            <!--<div class="form-top-right">
+                                <i class="fa fa-key"></i>
+                            </div>-->
+                        </div>
+                        <div class="form-bottom" style="padding-left: 10%; padding-right: 10%;">
+                            <form name="formuLogin" role="form" method="POST" class="login-form">
+                                {{ formlogin.hidden_tag() }}
+                                <div class="form-group" style="padding-bottom:5%">
+                                    {{ formlogin.logusuario.label(style="padding-bottom:1%") }}
+                                    {{ formlogin.logusuario(class="form-control",placeholder="Usuario...") }}
+                                    {% for error in formlogin.logusuario.errors %}
+                                                    <span style = "color:red;">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-group">
+                                    {{ formlogin.logclave.label(style="padding-bottom:1%") }}
+                                    {{ formlogin.logclave(class="form-control",placeholder="Contraseña...") }}
+                                </div>
+                                <div class="d-grid gap-2" style= "padding-top: 10%">
+                                    {% with messages = get_flashed_messages(category_filter=['errordelogin']) %}
+                                    {% if messages %}
+                                    {% for msg in messages %}
+                                    <span style="color: red" >{{msg}}</span>
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% endwith %}
+                                    {{ formlogin.enviar(class = "btn btn-secondary") }}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+<!-------------------------------------------- Finaliza Primera Form--------------------------------------------------------->
+
+                    <div class="col-md-1 middle-border" style="background-color:rgb(67,67,67) ;"></div>
+<!-------------------------------------------- Espacio en el centro---------------------------------------------------------->                        	
+                    <div class="col-md-5">                     	
+                        		<div class="form-top">
+	                        		<div class="form-top-left" style="padding: 5%; padding-bottom: 2%;">
+	                        			<h3>Regístrate Ahora!</h3>
+	                            		<p style="text-align: center;">Ingresa los datos</p>
+	                        		</div>
+	                            </div>
+	                            <div class="form-bottom" style="padding-left: 10%; padding-right: 10%;">
+				                    <form name="formuRegister" role="form" method="POST" class="registration-form">
+                                        {{ formregister.hidden_tag() }}
+				                    	<div class="form-group">
+                                            {{ formregister.regnombre.label(style="padding-bottom:1%") }}
+                                            {{ formregister.regnombre(class="form-control",placeholder="Nombre...") }}
+                                                {% for error in formregister.regnombre.errors %}
+                                                    <span style = "color:red;">{{ error }}</span>
+                                                {% endfor %}
+				                        </div>
+				                        <div class="form-group">
+                                            {{ formregister.regusuario.label(style="padding-bottom:1%; padding-top: 2%") }}
+                                            {{ formregister.regusuario(class="form-control",placeholder="Usuario...") }}
+                                                {% for error in formregister.regusuario.errors %}
+                                                    <span style = "color:red;">{{ error }}</span>
+                                                {% endfor %}
+				                        </div>
+				                        <div class="form-group">
+                                            {{ formregister.regclave.label(style="padding-bottom:1%; padding-top: 2%") }}
+                                            {{ formregister.regclave(class="form-control",placeholder="Contraseña...") }}
+                                                {% for error in formregister.regclave.errors %}
+                                                    <span style = "color:red;">{{ error }}</span>
+                                                {% endfor %}
+				                        </div>
+				                        <div class="form-group">
+                                            {{ formregister.regclave2.label(style="padding-bottom:1%; padding-top: 2%") }}
+                                            {{ formregister.regclave2(class="form-control",placeholder="Confirme su Contraseña...") }}
+                                                {% for error in formregister.regclave2.errors %}
+                                                    <span style = "color:red;">{{ error }}</span>
+                                                {% endfor %}
+				                        </div>
+                                        <div class="d-grid gap-2" style= "padding-top: 10%; padding-bottom: 10%;">
+                                            {% with messages = get_flashed_messages(category_filter=['errorderegistro']) %}
+                                            {% if messages %}
+                                            {% for msg in messages %}
+                                            <span style="color: red" >{{msg}}</span>
+                                            {% endfor %}
+                                            {% endif %}
+                                            {% endwith %}
+                                            {% with messages = get_flashed_messages(category_filter=['exitoso']) %}
+                                            {% if messages %}
+                                            {% for msg in messages %}
+                                            <span style="color: green" >{{msg}}</span>
+                                            {% endfor %}
+                                            {% endif %}
+                                            {% endwith %}
+                                            {{ formregister.registrarse(class = "btn btn-secondary") }}
+                                        </div>
+				                    </form>
+			                    </div>                        	
+                    </div>
+                    <!--------Espacio al Final-------->
+                    <div class="col-md-1 middle-border" style="background-color:rgb(67,67,67) ;"></div>
+
+            </div>
+        </div>
+    </section>
+    {% endblock %}
