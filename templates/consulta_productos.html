@@ -1,0 +1,49 @@
+{%extends 'crud_productos.html'%} {%block bloque%}
+
+<center><h2>Listado de productos</h2></center>
+
+<table
+  style="width: 90%; text-align: center"
+  id="tabla"
+  border="1"
+  align="center"
+>
+  <tbody style="text-align: center">
+    <tr style="text-align: center">
+      <td style="text-align: center">ID</td>
+      <td style="text-align: center">Nombre</td>
+      <td style="text-align: center">Qty</td>
+      <td style="text-align: center">Unidad</td>
+      <td style="text-align: center">Precio</td>
+      <td style="text-align: center">% de Promoción</td>
+      <td style="text-align: center">Calificacion</td>
+      <td style="text-align: center">Categoria</td>
+      <td style="text-align: center">Aplica el descuento</td>
+      <!-- Condicional de sesión -->
+      <td style="text-align: center"># de Ventas</td>
+      <td style="text-align: center">Total de ventas</td>
+      <td style="text-align: center">Total descontado</td>
+      <td style="text-align: center">Dado de Baja</td>
+    </tr>
+    {% for r in row %}
+    <tr>
+      <td style="text-align: center">{{ r ["id_producto"] }}</td>
+      <td style="text-align: center">{{ r ["nombre_producto"] }}</td>
+      <td style="text-align: center">{{ r ["qty"] }}</td>
+      <td style="text-align: center">{{ r ["unidad"] }}</td>
+      <td style="text-align: center">{{ r ["precio"] }}</td>
+      <td style="text-align: center">{{ r ["promocion"] }}</td>
+      <td style="text-align: center">{{ r ["calificacion"] }}</td>
+      <td style="text-align: center">{{ r ["categoria"] }}</td>
+      <td style="text-align: center">{{ r ["aplica_descuento"] }}</td>
+      <!-- Condicional de sesión-->
+      <td style="text-align: center">{{ r ["num_ventas"] }}</td>
+      <td style="text-align: center">{{ r ["total_ventas"] }}</td>
+      <td style="text-align: center">{{ r ["acum_descontado"] }}</td>
+      <td style="text-align: center">{{ r ["baja"] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{%endblock%}

@@ -1,0 +1,110 @@
+{%extends 'base.html'%} 
+
+{%block contenido%}
+
+<center><h1 style="align-items: center">Gestión de Productos</h1></center>
+<form
+  id="formulario"
+  method="post"
+  name="crud_productos"
+  style="align-items: center; width: 100%; height: 100%"
+>
+  <div class="bloque_formulario">
+    <p
+      style="
+        float: left;
+        background-color: rgb(141, 141, 141);
+        padding: 10px;
+        width: 30%;
+      "
+    >
+      {{form.id_producto.label(class="form_productos")}}
+      {{form.id_producto(class="form_productos")}}
+    </p>
+    <p
+      style="
+        float: left;
+        background-color: rgb(141, 141, 141);
+        padding: 10px;
+        width: 30%;
+      "
+    >
+      {{form.nombre_producto.label(class="form_productos")}}
+      {{form.nombre_producto(class="form_productos")}}
+    </p>
+
+    <p
+      style="
+        float: left;
+        background-color: rgb(141, 141, 141);
+        padding: 10px;
+        width: 30%;
+      "
+    >
+      {{form.precio.label(class="form_productos")}}
+      {{form.precio(class="form_productos")}}
+    </p>
+    <p
+      style="
+        float: left;
+        background-color: rgb(141, 141, 141);
+        padding: 10px;
+        width: 30%;
+      "
+    >
+      {{form.promocion.label(class="form_productos")}}
+      {{form.promocion(class="form_productos")}}
+    </p>
+    <p
+      style="
+        float: left;
+        background-color: rgb(141, 141, 141);
+        padding: 10px;
+        width: 30%;
+      "
+    >
+      {{form.aplica_descuento.label(class="form_productos")}}
+      {{form.aplica_descuento(class="browser-default")}}
+    </p>
+    <p
+      style="
+        float: left;
+        background-color: rgb(141, 141, 141);
+        padding: 10px;
+      "
+    >
+        {{form.listar(class="form_button")}}
+    </p>
+    <p
+    style="
+      float: left;
+      background-color: rgb(141, 141, 141);
+      padding: 10px;
+    "
+  >
+      {{form.eliminar(class="form_button")}}
+  </p>
+  <p
+  style="
+    float: left;
+    background-color: rgb(141, 141, 141);
+    padding: 10px;
+  "
+>
+    {{form.actualizar(class="form_button")}}
+</p>
+<p
+style="
+  float: left;
+  background-color: rgb(141, 141, 141);
+  padding: 10px;
+"
+>
+  {{form.crear(class="form_button")}}
+</p>
+  </div>
+</form>
+
+{%block bloque%} {%endblock%}
+
+{%endblock%}
