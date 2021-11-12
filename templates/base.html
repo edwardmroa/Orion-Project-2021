@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<!--meta name="viewport" content="width=device-width, initial-scale=1.0"/-->
+    {% if titulo %}
+    <title>{{ titulo }} </title>
+    {% else %}
+        <title></title>
+    {% endif %}
+    
+    <!-- Normalize CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}"/>
+        
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}"/>
+
+    <!-- Material Design Iconic Font CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/material-design-iconic-font.min.css') }}"/>
+
+    <!-- Malihu jQuery custom content scroller CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.mCustomScrollbar.css') }}"/>
+
+    <!-- Sweet Alert CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sweetalert.css') }}"/>
+
+    <!-- MaterialDark CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+    <div class="ContentPage-Nav full-width">
+        <ul class="full-width">
+            <li><figure><img src="{{ url_for('static', filename='assets/img/user.png') }}" alt="UserImage"></figure></li>
+            <li style="padding:0 5px;">{{ session['user_name'] }}</li>
+            <li><a href="#" class="tooltipped waves-effect waves-light btn-ExitSystem" data-position="bottom" data-delay="50" data-tooltip="Cerrar Sesion"><i class="zmdi zmdi-power"></i></a></li>
+            <li><a href="/pedido" class="tooltipped waves-effect waves-light " data-position="bottom" data-delay="50" data-tooltip="Pedido"><i class="zmdi zmdi-shopping-cart"></i></a></li>
+            <li><a href="/listadeseos" class="tooltipped waves-effect waves-light " data-position="bottom" data-delay="50" data-tooltip="Lista de Deseos"><i class="zmdi zmdi-card-giftcard"></i></a></li>
+            <li class="brand-logo center">ORION</li>
+        </ul>
+          
+    </div>
+
+    <div class="row">
+        <!-- Tiles -->
+        <article class="col s12 l10 offset-l1">
+            {% block contenido %}
+            {% endblock %}
+        </article>
+    </div>
+
+    
+    <!-- Sweet Alert JS -->
+    <script src="{{ url_for('static', filename='js/sweetalert.min.js') }}"></script>
+
+    <!-- jQuery -->
+    <script src="{{ url_for('static', filename='js/jquery-2.2.0.min.js') }}"></script>
+	<!--script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="{{ url_for('static', filename='js/jquery-2.2.0.min.js') }}"><\/script>')</script-->
+    
+    <!-- Materialize JS -->
+    <script src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+    
+    <!-- Malihu jQuery custom content scroller JS -->
+    <script src="{{ url_for('static', filename='js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+    
+    <!-- MaterialDark JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

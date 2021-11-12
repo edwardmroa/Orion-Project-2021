@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block contenido %}
+    <centre>
+    
+    <form action=""
+    method="post" 
+    name="formRegistroComprador" 
+    width="350px"
+    padding="16px"
+    border-radius="10px"
+>
+    <p>
+        {{ form.cedula.label }} 
+        {{ form.cedula }} 
+    </p>
+    <p> 
+        {{ form.nombreCompleto.label }} 
+        {{ form.nombreCompleto }}
+        </p>
+    <p>
+        {{ form.sexo.label }} 
+        {{ form.sexo(class="browser-default") }}
+        </p>
+    <p>
+        {{ form.fechaNacimiento.label }} 
+        {{ form.fechaNacimiento }}
+        </p>
+    <p>
+        {{ form.direccion.label }} 
+        {{ form.direccion }} 
+        </p>  
+    <p>
+        {{ form.ciudad.label }} 
+        {{ form.ciudad }} 
+    </p>
+    <p>
+        {{ form.username.label }} 
+        {{ form.username }} 
+    </p>
+    <p>
+        {{ form.password.label }} 
+        {{ form.password }} 
+    </p>  
+    <p>
+        <button type="submit" id="guardarCambios">Registrarse</button>
+    </p> 
+    </form>
+    </centre>
+        
+
+{% endblock %}
