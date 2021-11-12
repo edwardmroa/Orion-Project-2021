@@ -35,7 +35,7 @@
       <td style="text-align: center">{{ r ["promocion"] }}</td>
       <td style="text-align: center">{{ r ["calificacion"] }}</td>
       <td style="text-align: center">{{ r ["categoria"] }}</td>
-      <td style="text-align: center">{{ r ["aplica_descuento"] }}</td>
+      <td style="text-align: center">{{ "Si" if(r ["aplica_descuento"]) else "No" }}</td>
       <!-- Condicional de sesión-->
       <td style="text-align: center">{{ r ["num_ventas"] }}</td>
       <td style="text-align: center">{{ r ["total_ventas"] }}</td>
