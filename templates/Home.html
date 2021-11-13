@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/Home.css')}}">
+    <title>Home</title>
+</head>
+<body> 
+    <header class="header">
+        <div class="contenedor  contenedor-logo-nav">
+            <a href="#">
+                <img class="Logo-Orion" src="{{url_for('static', filename='img/Orion-Proyec.png')}}" alt="Orion Proyec Store" height="auto" width="180pt">
+            </a>
+            <input class="buscador" type="text" placeholder="¿Que deseas buscar?">
+            <nav class="nav">
+                <ul class="Op">
+                    <li class="nav-op"><a href="#"><i class="far fa-user"></i>Login</a></li>
+                    <li class="nav-op"><a href="#"><i class="fas fa-sign-in-alt"></i>Registro</a></li>
+                </ul>              
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="slider">
+            <ul class="slider">
+                <li> <img class="banner" src="{{url_for('static', filename='img/Banner.png')}}" alt="Banner" height="120%" width="100%"></li>
+                <li> <img class="banner2" src="{{url_for('static', filename='img/banner2.png')}}" alt="Banner" height="120%" width="100%"></li>
+                <li> <img class="banner3" src="{{url_for('static', filename='img/banner3.png')}}" alt="Banner" height="120%" width="100%"></li>
+                <li> <img class="banner4" src="{{url_for('static', filename='img/banner4.png')}}" alt="Banner" height="120%" width="100%"></li>
+            </ul>
+        </div> 
+
+        <div class="container-product">
+
+        </div>
+
+    </main>
+        
+</body>
+
+<script src="https://kit.fontawesome.com/07398d27e2.js" crossorigin="anonymous"></script>
+<script src="{{url_for('static', filename='js/Home.js')}}"></script>
+</html>
