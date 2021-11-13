@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@600&display=swap');
+
+:root{
+
+    /*colors*/
+    --redOrion: #F20544;
+    --blueOrion: #044BD9;
+    --greenOrion: #83A603;
+    --yellowOrion: #F2CB05;
+    --blackOrion: #0D0D0D;   
+
+    /*fonts*/
+    font-family: 'Hind Siliguri', sans-serif;
+}
+
+body{
+    margin: 0;
+}
+
+.header{
+    background:#F20544;
+    padding: 0;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+}
+
+.header a{
+    text-decoration: none;
+    color: var(--yellowOrion);
+}
+
+.contenedor-logo-nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+}
+
+.buscador{
+    border-radius: 0.5rem;
+    border: none;
+    width: 40rem;
+    height: 2rem;
+    background-image: url("/static/img/busqueda.png");
+    background-repeat:no-repeat;
+    background-size: 34px;
+    background-position-x: left;
+    padding-left:30px;
+}
+
+.nav ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav ul li{
+    display: inline-block;
+    padding-right: 2rem;
+}
+
+.nav ul li a{
+    display: block;
+    padding: 0.6rem 1rem;
+}
+
+.nav ul li i{
+    display: block;    
+    font-size: 1.5rem;
+
+}
+
+.nav-op:hover{
+    color: var(--greenOrion);
+}
+
+.main{
+    padding-top: .5rem;
+}
+
+.slider{    
+    width: 100%;
+    margin:auto; 
+    overflow: hidden;   
+}
+
+.slider ul{
+    display: flex;
+    padding: 0;
+    width: 400%;
+    animation: cambio 20s infinite alternate;
+    
+
+}
+.slider li{
+    width: 100%;
+    list-style: none;
+}
+
+.banner{
+    height: 86%;
+    width: 100%;
+    margin-top: 74px;
+}
+
+@keyframes cambio {
+    0%{margin-left:0%;}
+    20%{margin-left:0%;}
+
+    25%{margin-left:-100%;}
+    63%{margin-left:-100%;}
+
+    68%{margin-left:-200%;}
+    95%{margin-left:-200%;}
+
+    100%{margin-left:-300%;}
+}
+
+.container-product{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;   
+}
+
+.productoimg{
+    width: 100px;
+    height: 120px;
+    padding: 1rem 2rem;
+}
+
+.flex-item{
+    padding: 0 1.5rem;
+    flex-grow: 1;
+    flex-basis: 300px;
+    margin: 20px;
+    max-width: 200px;
+    border: 2px var(--blueOrion) solid;
+    box-shadow: 3px 4px 2px var(--blackOrion);
+
+}
