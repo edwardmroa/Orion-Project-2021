@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block contenido %}
+<div class="col s8 offset-s2 m6 offset-m3">
+    <br>
+<form action="" method="post" name="formCambioPassword">
+<p>
+    {{ form.password.label }} 
+    {{ form.password }} 
+</p>
+<p>
+    {{ form.confirmar( class="btn waves-effect waves-light") }}
+    </p>
+</form>
+</div>
+{% endblock %}

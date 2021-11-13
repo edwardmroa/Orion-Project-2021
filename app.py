@@ -2,7 +2,7 @@ import os
 import sqlite3
 from sqlite3 import Error
 from flask import Flask, render_template, flash, request, redirect, url_for, session, send_file, current_app, g
-from formulario import RegistroComprador, producto, Login, PerfilUsuario, formularioLogin, formularioRegistro, CambioPassword
+from formulario import RegistroComprador, producto, Login, PerfilUsuario, formularioLogin, formularioRegistro, CambioPassword, EliminarCuenta
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from db import get_db, close_db
@@ -205,13 +205,12 @@ def login():
             print(password)
             print(generate_password_hash(password))
             user = db.execute(
-                'SELECT * FROM usuarios WHERE username = ?  ', (username, ) 
+                'SELECT * FROM usuarios WHERE username = ?  and Estado= "Activo"', (username, ) 
             ).fetchone()
             close_db()
             if user is None:
                 error = 'Usuario o contraseña inválidos'
                 flash(error)
-
             else:                           
                 passwordDataBase= user[8]
                 resultado=check_password_hash(passwordDataBase,password)
@@ -252,7 +251,7 @@ def usuario(id):
             if request.method == 'POST':
                 datos = [request.form['cedula'], request.form['nombreCompleto'], request.form['sexo'], request.form['fechaNacimiento'], request.form['direccion'], request.form['ciudad'], request.form['username'], request.form['cargo'], request.form['rol']  ]
                 #if validarDatosDeUsuario("NombreValido",correo,fechaDeNacimiento,celular,identificacion) ==  None:
-                orden = "UPDATE usuarios SET cedula = ?,nombre = ?,sexo =?,fecha_nacimiento = ?,direccion = ?,ciudad = ?,username = ?, cargo = ?, rol = ? WHERE id_usuario = ?"
+                orden = "UPDATE usuarios SET cedula = ?,nombre = ?,sexo =?,fecha_nacimiento = ?,direccion = ?,ciudad = ?,username = ?, cargo = ?, rol = ? WHERE id_usuario = ? and Estado = 'Activo' "
                 db = get_db()
                 db.execute(orden,(datos[0], datos[1], datos[2], datos[3], datos[4],  datos[5], datos[6], datos[7], datos[8], id))
                 db.commit()
@@ -270,7 +269,7 @@ def usuarioLocal():
         form = PerfilUsuario()
         id = session['user_id']
         db = get_db()
-        orden = "SELECT cedula, nombre,  sexo, fecha_nacimiento,  direccion,ciudad, username,cargo, rol FROM usuarios WHERE id_usuario= ?"
+        orden = "SELECT cedula, nombre,  sexo, fecha_nacimiento,  direccion,ciudad, username,cargo, rol FROM usuarios WHERE id_usuario= ? and Estado = 'Activo' "
         data = db.execute(orden, (id,)).fetchone()
         form.cedula.default = data[0]
         form.nombreCompleto.default = data[1]
@@ -311,18 +310,38 @@ def cambioContraseña( ):
                 'SELECT * FROM usuarios WHERE username = ?  ', (username, ) 
                 ).fetchone()
                 r = check_password_hash(original[8] , actual)
-                print("WWWWWWWWWWWWWWWWWWWWWWWWWW")
                 if r:
                     db = get_db()
-                    print("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ")
-                    db.execute("UPDATE usuarios SET password = ? WHERE username = ?",(generate_password_hash(nueva),username,))
+                    db.execute("UPDATE usuarios SET password = ? WHERE username = ? and Estado='Activo'",(generate_password_hash(nueva),username,))
                     db.commit()
                 db.close()
         return render_template('cambioPassword.html', form=form, titulo='Cambio de contraseña')
     else:
         return redirect( url_for( 'dashboard' ) ) 
 
-  
+@app.route('/perfil/delete', methods=('GET', 'POST'))
+def eliminarPerfil( ): 
+    if 'user_id' in session:
+        form = EliminarCuenta()
+        if request.method == 'POST':
+            password = request.form['password'] 
+            db = get_db()
+            username = session['user_name']
+            original = db.execute(
+            'SELECT * FROM usuarios WHERE username = ? and Estado="Activo" ', (username, ) 
+            ).fetchone()
+            r = check_password_hash(original[8] , password)
+            if r:
+                db = get_db()
+                db.execute("UPDATE usuarios SET Estado = ? WHERE username = ? and Estado='Activo'",('Cerrado',username,))
+                db.commit()
+                db.close()
+                return redirect( url_for( 'dashboard' ) )
+            db.close()
+        return render_template('eliminarCuenta.html', form=form, titulo='Eliminar mi cuenta')
+    else:
+        return redirect( url_for( 'dashboard' ) ) 
+
 @app.route( '/logout' )
 def logout():
     session.clear()

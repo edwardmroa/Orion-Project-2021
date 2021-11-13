@@ -66,3 +66,7 @@ class CambioPassword(FlaskForm):
     nueva = PasswordField('Contraseña nueva', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite la nueva contraseña"})
     confirmacion = PasswordField('Confirme su nueva contraseña', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Confirme su nueva contraseña"})
     guardar = SubmitField('GUARDAR')
+
+class EliminarCuenta(FlaskForm):
+    password = PasswordField('Confirme su contraseña', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Ingrese su contraseña actual"})
+    confirmar = SubmitField('CONFIRMAR')

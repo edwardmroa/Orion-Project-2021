@@ -89,6 +89,8 @@
                                     }
                                 </script>
                             </form>
+                        </div>
+                        <div class="col s6">
                             <form action="{{ url_for('cambioContraseña') }}">
                                 {% if request.path == "/perfil/" or request.path == "/perfil" %}   
                                 <p> 
@@ -96,7 +98,15 @@
                                 </p>
                                 {% endif %}
                             </form> 
-
+                        </div>
+                        <div class="col s6">
+                            <form action="{{ url_for('eliminarPerfil') }}">
+                                {% if request.path == "/perfil/" or request.path == "/perfil" %}   
+                                <p> 
+                                    <button class="btn waves-effect waves-light" type="submit">Eliminar cuenta</button>
+                                </p>
+                                {% endif %}
+                            </form> 
                         </div>
                     </div>
                 </div>

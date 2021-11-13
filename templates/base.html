@@ -53,11 +53,22 @@
             <ul id="nav-mobile" class="left">
                 <li style="padding:0 5px;">{{ session['user_name'] }}</li>
                 </ul>
+            {% if 'user_name' in session %}
               <ul id="nav-mobile" class="right">
                 <li><a href="/pedido" class="tooltipped waves-effect waves-light " data-position="bottom" data-delay="50" data-tooltip="Pedido"><i class="zmdi zmdi-shopping-cart"></i></a></li>
                 <li><a href="/listadeseos" class="tooltipped waves-effect waves-light " data-position="bottom" data-delay="50" data-tooltip="Lista de Deseos"><i class="zmdi zmdi-card-giftcard"></i></a></li>
-                <li><a href="/logout" class="tooltipped waves-effect waves-light btn-ExitSystem" data-position="bottom" data-delay="50" data-tooltip="Cerrar Sesion"><i class="zmdi zmdi-power"></i></a></li>
-                </ul>
+                <li><a href="" id="cerrar" class="tooltipped waves-effect waves-light btn-ExitSystem" data-position="bottom" data-delay="50" data-tooltip="Cerrar Sesion" onclick="cerrarSesion()" target=""><i class="zmdi zmdi-power"></i></a></li>
+                <script>
+                  function cerrarSesion(){
+                    var respuesta = confirm('¿Desea cerrar sesión?')
+                    if(respuesta == true){
+                      document.getElementById("cerrar").href = "/logout" 
+                      document.getElementById("cerrar").target = "_self" 
+                    }
+                  }
+                </script>  
+              </ul>
+              {% endif %}
             </div>
           </nav>
 
