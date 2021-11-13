@@ -29,7 +29,7 @@
 </head>
 <body>
 
-    <div class="ContentPage-Nav full-width">
+    <!-- <div class="ContentPage-Nav full-width">
         <ul class="full-width">
             <li><figure><img src="{{ url_for('static', filename='assets/img/user.png') }}" alt="UserImage"></figure></li>
             <li style="padding:0 5px;">{{ session['user_name'] }}</li>
@@ -37,9 +37,22 @@
             <li><a href="/pedido" class="tooltipped waves-effect waves-light " data-position="bottom" data-delay="50" data-tooltip="Pedido"><i class="zmdi zmdi-shopping-cart"></i></a></li>
             <li><a href="/listadeseos" class="tooltipped waves-effect waves-light " data-position="bottom" data-delay="50" data-tooltip="Lista de Deseos"><i class="zmdi zmdi-card-giftcard"></i></a></li>
             <li class="brand-logo center">ORION</li>
-        </ul>
-          
-    </div>
+        </ul>      
+    </div> -->
+
+    <nav>
+        <div class="nav-wrapper indigo darken-1">
+        <a href="/" class="brand-logo center">Orion</a>
+        <ul id="nav-mobile" class="left">
+            <li style="padding:0 5px;">{{ session['user_name'] }}</li>
+            </ul>
+          <ul id="nav-mobile" class="right">
+            <li><a href="/pedido" class="tooltipped waves-effect waves-light " data-position="bottom" data-delay="50" data-tooltip="Pedido"><i class="zmdi zmdi-shopping-cart"></i></a></li>
+            <li><a href="/listadeseos" class="tooltipped waves-effect waves-light " data-position="bottom" data-delay="50" data-tooltip="Lista de Deseos"><i class="zmdi zmdi-card-giftcard"></i></a></li>
+            <li><a href="/logout" class="tooltipped waves-effect waves-light btn-ExitSystem" data-position="bottom" data-delay="50" data-tooltip="Cerrar Sesion"><i class="zmdi zmdi-power"></i></a></li>
+            </ul>
+        </div>
+      </nav>
 
     <div class="row">
         <!-- Tiles -->
@@ -66,8 +79,5 @@
     
     <!-- MaterialDark JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
-    <script src="{{ url_for('static', filename = 'js/funciones.js' ) }}"></script>
-
 </body>
 </html>

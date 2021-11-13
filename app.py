@@ -2,8 +2,13 @@ import os
 import sqlite3
 from sqlite3 import Error
 from flask import Flask, render_template, flash, request, redirect, url_for, session, send_file, current_app, g
-from formulario import RegistroComprador, producto
+from formulario import RegistroComprador, producto, Login, PerfilUsuario
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+from db import get_db, close_db
+
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 
 
 SECRET_KEY = os.urandom(32)
@@ -15,10 +20,35 @@ def dashboard():
 
     return "Home"
 
-
-@app.route("/registroComprador", methods=["GET", "POST"])
-def registroComprador():
+@app.route("/registro", methods=["GET", "POST"])
+def registro():
     form = RegistroComprador()
+    if request.method == 'POST':
+        datos = [request.form['cedula'], request.form['nombreCompleto'], request.form['sexo'], request.form['fechaNacimiento'], request.form['direccion'], request.form['ciudad'], request.form['username'], request.form['password'], "Comprador" ]
+        cedula = datos[0]
+        fechaDeNacimiento = datos[3]
+        fechaDeNacimiento = fechaDeNacimiento.split("-")
+        celular = datos[5]   
+        #fallo = validarDatosDeUsuario(datos[7],correo,fechaDeNacimiento,celular,identificacion)
+        fallo = None
+        db= get_db()
+        if  fallo == None:
+            orden = "SELECT id_usuario FROM usuarios WHERE cedula= ?"
+            if db.execute(orden,(datos[0],)).fetchone()  == None:
+                orden = "SELECT id_usuario FROM usuarios WHERE username= ?"
+                if db.execute(orden,(datos[6],)).fetchone() == None:
+                    orden = "INSERT INTO usuarios (cedula, nombre, sexo, fecha_nacimiento,direccion, ciudad,username, password, rol, acum_compras, num_bonos) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+                    db.execute(orden,(datos[0], datos[1], datos[2], datos[3], datos[4],  datos[5],datos[6], generate_password_hash(datos[7]), datos[8],0,0))
+                    db.commit()
+                    db.close()
+                    return redirect( url_for( 'registro' ) )
+                else:
+                    fallo = "Usuario ya existe en base de datos"    
+            else:
+               fallo = "Cedula ya existe en base de datos"
+        if fallo is not None:
+            flash(fallo)
+        db.close()
     return render_template('registroComprador.html', form=form, titulo='Registrar Usuario')
 
 
@@ -151,6 +181,92 @@ def gestion_productos_eliminar():
             mensaje = "Error"
     
     return render_template('crear_productos.html', form=form, titulo="Gestión de Productos", mensaje=mensaje)
+        return "Ocurrió un error, vuelva a intentar"
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = Login()
+    try:
+        if request.method == 'POST':
+            db = get_db()
+            error = None
+            username = request.form['username']
+            password = request.form['password']
+            error = None
+            # if not username:
+            #     error = 'Debes ingresar el usuario'
+            #     flash( error )
+
+            # #if not validacion.isUsernameValid(username):
+            #     error = "El usuario debe ser alfanumerico o incluir solo '.','_','-'"
+            #     flash(error)
+
+            # #if not password:
+            #     error = 'Contraseña requerida'
+            #     flash( error )
+            
+            print(password)
+            print(generate_password_hash(password))
+            user = db.execute(
+                'SELECT * FROM usuarios WHERE username = ?  ', (username, ) 
+            ).fetchone()
+            close_db()
+            if user is None:
+                error = 'Usuario o contraseña inválidos'
+                flash(error)
+
+            else:                           
+                passwordDataBase= user[8]
+                resultado=check_password_hash(passwordDataBase,password)
+
+                if(not resultado):
+                    error = 'Usuario o contraseña inválidos'
+                    flash(error)
+                else:
+                    session.clear()
+                    session['user_id'] = user[0]
+                    session['user_name'] = user[7]
+                    session['rol'] = user[10]
+                    return redirect( url_for( 'dashboard' ) ) 
+                    
+        return render_template('login.html', form=form, titulo='Inicio de sesión')
+    except:
+        return render_template('login.html', form=form, titulo='Inicio de sesión')
+
+
+@app.route('/perfil', methods=('GET', 'POST'))
+def usuario( ): 
+    form = PerfilUsuario()
+    if session['user_id'] !=None:
+        id = session['user_id']
+        db = get_db()
+        orden = "SELECT cedula, nombre,  sexo, fecha_nacimiento,  direccion,ciudad, username,cargo, rol FROM usuarios WHERE id_usuario= ?"
+        data = db.execute(orden, (id,)).fetchone()
+        form.cedula.default = data[0]
+        form.nombreCompleto.default = data[1]
+        form.sexo.default = data[2]
+        form.fechaNacimiento.default =  datetime.strptime(data[3],'%Y-%m-%d')
+        form.direccion.default = data[4]
+        form.ciudad.default = data[5]
+        form.username.default = data[6]
+        form.cargo.default = data[7]
+        form.rol.default = data[8]
+        form.process()
+        if request.method == 'POST':
+            datos = [request.form['cedula'], request.form['nombreCompleto'], request.form['sexo'], request.form['fechaNacimiento'], request.form['direccion'], request.form['ciudad'], request.form['username'], request.form['cargo'], request.form['rol']  ]
+            #if validarDatosDeUsuario("NombreValido",correo,fechaDeNacimiento,celular,identificacion) ==  None:
+            orden = "UPDATE usuarios SET cedula = ?,nombre = ?,sexo =?,fecha_nacimiento = ?,direccion = ?,ciudad = ?,username = ?, cargo = ?, rol = ? WHERE id_usuario = ?"
+            db = get_db()
+            db.execute(orden,(datos[0], datos[1], datos[2], datos[3], datos[4],  datos[5], datos[6], datos[7], datos[8], id))
+            db.commit()
+            db.close()
+        db.close()
+    return render_template('perfilDeUsuario.html', form=form, titulo='Usuario')
+  
+@app.route( '/logout' )
+def logout():
+    session.clear()
+    return redirect( url_for( 'dashboard' ) )   
 
 if (__name__ == "__main__"):
     app.run(debug=True)

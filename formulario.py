@@ -33,3 +33,19 @@ class producto(FlaskForm):
     eliminar = SubmitField( 'Eliminar', render_kw={"onmouseover": "eliminarProd()", "class":"form_boton"})
     actualizar = SubmitField( 'Actualizar', render_kw={"onmouseover": "actualizarProd()","class":"form_boton"})
     crear = SubmitField( 'Crear', render_kw={"onmouseover": "crearProd()","class":"form_boton"})
+
+class Login(FlaskForm):
+    username = StringField('Usuario', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su usuario"})
+    password = PasswordField('Contraseña', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su contraseña"})
+
+class PerfilUsuario(FlaskForm):
+    cedula = StringField('Cédula', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su cédula","disabled":"true"})
+    nombreCompleto = StringField('Nombre completo', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su nombre completo","disabled":"true"})
+    sexo = SelectField(u'Sexo', choices=[('Masculino', 'Masculino'), ('Femenino', 'Femenino'), ('NoBinario', 'Prefiero no decirlo')], render_kw = {"disabled":"true"})
+    fechaNacimiento = DateField('Fecha de nacimiento',format='%Y-%m-%d' , validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"disabled":"true"})
+    direccion = StringField('Direccion', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su direccion de residencia","disabled":"true"})
+    ciudad = StringField('Ciudad', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su direccion de residencia","disabled":"true"})
+    username = StringField('Usuario', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su usuario","disabled":"true"})
+    cargo = StringField('Usuario', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su usuario","disabled":"true"})
+    rol = SelectField(u'Rol', choices=[('Super administrador', 'Super administrador'), ('Usuario interno', 'Usuario interno'), ('Usuario externo', 'Usuario externo')], render_kw = {"disabled":"true"})
+     

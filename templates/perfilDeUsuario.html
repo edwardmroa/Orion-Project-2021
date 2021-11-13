@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block contenido %}
+        <!-- Sección superior (Datos del usuario)-->
+        <div class="container">
+            <div class="section">
+                <div class="row">   
+                    <div class="col s12">                      
+                        <div class="section">
+                            <form action="" method="post" name="formEdicion">
+                                <!-- Agregar enlace con la base de datos y la url -->
+                                <div class="col s9">
+                                    <h3><b>Perfil de {{ form.nombreCompleto.data }}</b></h3>
+                                </div>
+
+                                <!-- Boton editar al ser presionado habilita el cambio de informacion, si es presionado de nuevo actualiza 
+                                    la informacion de la base de datos con la ingresada por el usuario y deshabilita la opción de modificar la información-->
+                                <div class="col s3">
+                                    <br>
+                                    <button class="btn waves-effect waves-light" type="button" name="action" onclick="deshabilitarCampos(false)" id="editar">Editar 
+                                        <i class="zmdi zmdi-edit zmdi-hc-1x"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Para hacer editable el input es necesario eliminar el atributo readonly desde js 
+                                    Para validar información se puede agregar el class validate que cambia el color del 
+                                    campo de texto
+                                -->
+                                <div class="col s12">
+                                
+                                    
+                                    <p>
+                                        {{ form.cedula.label }} 
+                                        {{ form.cedula }} 
+                                    </p>
+                                    <p> 
+                                        {{ form.nombreCompleto.label }} 
+                                        {{ form.nombreCompleto }}
+                                        </p>
+                                    <p>
+                                        {{ form.sexo.label }} 
+                                        {{ form.sexo(class="browser-default") }}
+                                        </p>
+                                    <p>
+                                        {{ form.fechaNacimiento.label }} 
+                                        {{ form.fechaNacimiento }}
+                                        </p>
+                                    <p>
+                                        {{ form.direccion.label }} 
+                                        {{ form.direccion }} 
+                                        </p>  
+                                    <p>
+                                        {{ form.ciudad.label }} 
+                                        {{ form.ciudad }} 
+                                    </p>
+                                    <p>
+                                        {{ form.username.label }} 
+                                        {{ form.username }} 
+                                    </p>
+
+                                    {% if session['rol'] == "Super administrador" %}   
+                                        <p> 
+                                            {{ form.cargo.label }} 
+                                            {{ form.cargo }} 
+                                        </p>
+                                        <p> 
+                                            {{ form.rol.label }} 
+                                            {{ form.rol(class="browser-default") }} 
+                                        </p> 
+                                    {% endif %} 
+
+                                    <button class="btn waves-effect waves-light" type="submit" style="display: none" id="guardarCambios" onsubmit="deshabilitarCampos(true)">Guardar Cambios</button>
+                                    
+                                </div>
+                                <script>
+                                    function deshabilitarCampos(valor){
+                                        document.getElementById("cedula").disabled = valor
+                                        document.getElementById("nombreCompleto").disabled = valor
+                                        document.getElementById("sexo").disabled = valor
+                                        document.getElementById("fechaNacimiento").disabled = valor
+                                        document.getElementById("direccion").disabled = valor
+                                        document.getElementById("ciudad").disabled = valor
+                                        document.getElementById("username").disabled = valor
+                                        document.getElementById("cargo").disabled = valor
+                                        document.getElementById("rol").disabled = valor   
+                                        document.getElementById("editar").disabled = !valor                        
+                                        if (!valor)
+                                            document.getElementById("guardarCambios").style ="display: block"
+                                        else
+                                            document.getElementById("guardarCambios").style = "display: none"
+                                    }
+                                </script>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
