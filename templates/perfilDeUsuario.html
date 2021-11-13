@@ -99,6 +99,13 @@
                                 {% endif %}
                             </form> 
                         </div>
+                        <form action="{{ url_for('dashboardUsuarioInterno') }}"> 
+                            {% if session['rol'] == "Super administrador"  %}  
+                            <p>
+                                <button class="btn" type="submit" id="volver">Volver a menu de gestion de usuario internos</button>
+                            </p> 
+                            {% endif %}
+                        </form> 
                         <div class="col s6">
                             <form action="{{ url_for('eliminarPerfil') }}">
                                 {% if request.path == "/perfil/" or request.path == "/perfil" %}   

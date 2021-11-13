@@ -2,7 +2,8 @@ import os
 import sqlite3
 from sqlite3 import Error
 from flask import Flask, render_template, flash, request, redirect, url_for, session, send_file, current_app, g
-from formulario import RegistroComprador, producto, Login, PerfilUsuario, formularioLogin, formularioRegistro, CambioPassword, EliminarCuenta
+from wtforms.validators import Length
+from formulario import RegistroComprador, producto, Login, PerfilUsuario, formularioLogin, formularioRegistro, CambioPassword, EliminarCuenta, RegistrarOperario, ListarOperarios
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from db import get_db, close_db
@@ -229,12 +230,12 @@ def login():
     except:
         return render_template('login.html', form=form, titulo='Inicio de sesión')
 
+@app.route('/dashboard/internos/<id>/update', methods=('GET', 'POST'))
 @app.route('/perfil/<id>', methods=('GET', 'POST'))
 def usuario(id): 
     if 'rol' in session and 'user_id' in session:
         if session['rol'] != 'Usuario externo':
             form = PerfilUsuario()
-            id = session['user_id']
             db = get_db()
             orden = "SELECT cedula, nombre,  sexo, fecha_nacimiento,  direccion,ciudad, username,cargo, rol FROM usuarios WHERE id_usuario= ?"
             data = db.execute(orden, (id,)).fetchone()
@@ -339,6 +340,79 @@ def eliminarPerfil( ):
                 return redirect( url_for( 'dashboard' ) )
             db.close()
         return render_template('eliminarCuenta.html', form=form, titulo='Eliminar mi cuenta')
+    else:
+        return redirect( url_for( 'dashboard' ) ) 
+
+@app.route('/dashboard/internos/registro', methods=('GET', 'POST'))
+def registroUsuarioInterno( ): 
+    form = RegistrarOperario()
+    if 'user_id' in session:
+        if session['rol'] == 'Super administrador' and request.method == 'POST':
+            datos = [request.form['cedula'], request.form['nombreCompleto'], request.form['sexo'], request.form['fechaNacimiento'], request.form['direccion'], request.form['ciudad'], request.form['username'], request.form['password'], request.form['cargo'], "Usuario interno" ]
+            cedula = datos[0]
+            fechaDeNacimiento = datos[3]
+            fechaDeNacimiento = fechaDeNacimiento.split("-")
+            celular = datos[5]   
+            #fallo = validarDatosDeUsuario(datos[7],correo,fechaDeNacimiento,celular,identificacion)
+            fallo = None
+            db= get_db()
+            if  fallo == None:
+                orden = "SELECT id_usuario FROM usuarios WHERE cedula= ?"
+                if db.execute(orden,(datos[0],)).fetchone()  == None:
+                    orden = "SELECT id_usuario FROM usuarios WHERE username= ?"
+                    if db.execute(orden,(datos[6],)).fetchone() == None:
+                        orden = "INSERT INTO usuarios (cedula, nombre, sexo, fecha_nacimiento,direccion, ciudad,username, password, rol, acum_compras, num_bonos, cargo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+                        db.execute(orden,(datos[0], datos[1], datos[2], datos[3], datos[4],  datos[5],datos[6], generate_password_hash(datos[7]), datos[9],0,0,datos[8]))
+                        db.commit()
+                        db.close()
+                        return redirect( url_for( 'dashboardUsuarioInterno' ) )
+                    else:
+                        fallo = "Usuario ya existe en base de datos"    
+                else:
+                    fallo = "Cedula ya existe en base de datos"
+            if fallo is not None:
+                flash(fallo)
+            db.close()
+        return render_template('registroOperarios.html', form=form, titulo='Registrar Usuario')
+    else:
+        return redirect( url_for( 'dashboard' ) ) 
+
+
+@app.route('/dashboard/internos', methods=('GET', 'POST'))
+def dashboardUsuarioInterno( ): 
+    if 'user_id' in session:
+        if session['rol'] == 'Super administrador':
+            form = ListarOperarios()
+            db = get_db()
+            usuarios = db.execute( 'SELECT id_usuario,cedula,nombre,username,cargo FROM usuarios WHERE rol = "Usuario interno" and Estado="Activo"').fetchall()
+            if request.method=='POST': 
+                cedula = request.form['busqueda']
+                if cedula.isdigit():
+                    for us in reversed(usuarios):
+                        cedulaUsuario = str(us[1])
+                        if not cedula in cedulaUsuario:
+                            usuarios.remove(us)
+            return render_template('dashboard_gestion_internos.html', usuarios = usuarios, form=form)
+        return redirect( url_for( 'dashboard' ) )
+    else:
+        return redirect( url_for( 'dashboard' ) ) 
+
+@app.route('/dashboard/internos/<id>/delete', methods=('GET', 'POST'))
+def eliminarPerfilOperario(id): 
+    if 'user_id' in session:
+        if session['rol'] == 'Super administrador':
+            db = get_db()
+            nombre = db.execute( 'SELECT username FROM usuarios WHERE id_usuario = ? and rol = "Usuario interno"', (id,)).fetchall()
+            if len(nombre)>0:  
+                nombre = nombre[0][0]
+                if request.method == 'POST':
+                    db.execute("UPDATE usuarios SET Estado = ? WHERE id_usuario = ? and Estado='Activo'",('Cerrado',id,))
+                    db.commit()
+                    db.close()
+                    return redirect( url_for( 'dashboardUsuarioInterno' ) )
+                return render_template('eliminarOperario.html', nombre=nombre, titulo='Eliminar cuenta')
+            return redirect( url_for( 'dashboardUsuarioInterno' ) )    
+        return redirect( url_for( 'dashboard' ) ) 
     else:
         return redirect( url_for( 'dashboard' ) ) 
 

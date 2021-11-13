@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block contenido %}
+
+    <div class="col s12 m6 offset-m3 ">
+        <br>
+        <h4 style="text-align: center;">Registrar usuario interno</h4>
+    <form action="" method="post" name="formRegistroOperario">
+    <p>
+        {{ form.cedula.label }} 
+        {{ form.cedula }} 
+    </p>
+    <p> 
+        {{ form.nombreCompleto.label }} 
+        {{ form.nombreCompleto }}
+        </p>
+    <p>
+        {{ form.sexo.label }} 
+        {{ form.sexo(class="browser-default") }}
+        </p>
+    <p>
+        {{ form.fechaNacimiento.label }} 
+        {{ form.fechaNacimiento }}
+        </p>
+    <p>
+        {{ form.direccion.label }} 
+        {{ form.direccion }} 
+        </p>  
+    <p>
+        {{ form.ciudad.label }} 
+        {{ form.ciudad }} 
+    </p>
+    <p>
+        {{ form.username.label }} 
+        {{ form.username }} 
+    </p>
+    <p>
+        {{ form.password.label }} 
+        {{ form.password }} 
+    </p>
+    <p>
+        {{ form.cargo.label }} 
+        {{ form.cargo }} 
+    </p> 
+    <p>
+        <button class="btn" type="submit" id="registrarUsuario">Registrar nuevo operario</button>
+    </p> 
+    </form>
+
+    <form action="{{ url_for('dashboardUsuarioInterno') }}"> 
+        <p>
+            <button class="btn" type="submit" id="volver">Volver a menu de gestion de usuario internos</button>
+        </p> 
+    </form> 
+    </div>
+        
+
+{% endblock %}

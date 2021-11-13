@@ -70,3 +70,19 @@ class CambioPassword(FlaskForm):
 class EliminarCuenta(FlaskForm):
     password = PasswordField('Confirme su contraseña', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Ingrese su contraseña actual"})
     confirmar = SubmitField('CONFIRMAR')
+
+class ListarOperarios(FlaskForm):
+    busqueda = StringField('', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Escriba la cedula del usuario interno a buscar"})
+    enviar = SubmitField('Buscar')
+
+class RegistrarOperario(FlaskForm):
+    cedula = StringField('Cédula', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite la cédula"})
+    nombreCompleto = StringField('Nombre completo', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite el nombre completo"})
+    sexo = SelectField(u'Sexo', choices=[('Masculino', 'Masculino'), ('Femenino', 'Femenino'), ('NoBinario', 'Prefiero no decirlo')])
+    fechaNacimiento = DateField('Fecha de nacimiento',format='%Y-%m-%d' , validators=[DataRequired(message='No dejar vacío, completar')])
+    direccion = StringField('Direccion', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite la direccion de residencia"})
+    ciudad = StringField('Ciudad', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite la direccion de residencia"})
+    username = StringField('Usuario', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite el usuario"})
+    password = PasswordField('Contraseña', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite la contraseña"})
+    cargo = StringField('Cargo', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite el cargo"})
+    
