@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block cuerpo %}
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+&nbsp;
+ 
+    <div class ="container">
+      <h3>Calificación de Productos</h3>
+      <!-- <div class="container" style="padding: 10%;padding-top: 1%;padding-bottom: 0%;">Para el futuro de la marca, la fundación “garantizará el respeto de los valores y principios: la gestión de las actividades de forma ética con integridad moral y corrección, la prioridad del desarrollo continuo a nivel global del nombre Armani, estrategia cuidadosa de diversificación de la empresa y sus marcas, manteniendo consistencia en el diseño de productos, imagen y comunicación ”.</div>  -->
+    </div>
+
+    &nbsp;
+
+    {% if scores|length >0 %}
+    <div class="grid-container ms-5 ps-5">
+        {% for score in scores %}
+        <div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">ProductoID: {{score[1]}}</label>
+                <textarea class="form-control" id="formcomentario" placeholder="Comentario" rows="2" disabled>{{score[3]}}</textarea>
+              </div>
+        </div>
+
+
+  {% if score[2] == "0" %}
+  
+        <div class="grid-item; col-12;" style="text-align: center; padding-top: 11%;">
+            <span class="fa fa-star" style="cursor: pointer; color:black"></span>
+            <span class="fa fa-star" style="cursor: pointer; color:black"></span>
+            <span class="fa fa-star" style="cursor: pointer;color:black"></span>
+            <span class="fa fa-star" style="cursor: pointer; color:black"></span>
+            <span class="fa fa-star" style="cursor: pointer;color:black"></span>
+        </div>
+
+        {% elif score[2] == "1" %}
+        <div class="grid-item; col-12;" style="text-align: center; padding-top: 11%;">
+            <span class="fa fa-star" style="cursor: pointer; color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer; color:black"></span>
+            <span class="fa fa-star" style="cursor: pointer;color:black"></span>
+            <span class="fa fa-star" style="cursor: pointer; color:black"></span>
+            <span class="fa fa-star" style="cursor: pointer;color:black"></span>
+        </div>
+
+        {% elif score[2] == "2" %}
+        <div class="grid-item; col-12;" style="text-align: center; padding-top: 11%;">
+            <span class="fa fa-star" style="cursor: pointer; color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer; color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer;color:black"></span>
+            <span class="fa fa-star" style="cursor: pointer; color:black"></span>
+            <span class="fa fa-star" style="cursor: pointer;color:black"></span>
+        </div>
+
+        {% elif score[2] == "3" %}
+        <div class="grid-item; col-12;" style="text-align: center; padding-top: 11%;">
+            <span class="fa fa-star" style="cursor: pointer; color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer; color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer;color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer; color:black"></span>
+            <span class="fa fa-star" style="cursor: pointer;color:black"></span>
+        </div>
+
+        {% elif score[2] == "4" %}
+        <div class="grid-item; col-12;" style="text-align: center; padding-top: 11%;">
+            <span class="fa fa-star" style="cursor: pointer; color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer; color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer;color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer; color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer;color:black"></span>
+        </div>
+
+        {% elif score[2] == "5" %}
+        <div class="grid-item; col-12;" style="text-align: center; padding-top: 11%;">
+            <span class="fa fa-star" style="cursor: pointer; color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer; color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer;color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer; color:orange"></span>
+            <span class="fa fa-star" style="cursor: pointer;color:orange"></span>
+        </div>
+        {% endif %}
+
+
+        <div class="grid-item">
+            <div class="grid-container">
+
+                <!-- <div class="mb-3">
+                    <div class="d-grid gap-2" style="padding-right: 5%;">
+                        <button type="submit" class="btn btn-secondary">Editar</button>
+                    </div>
+                </div> -->
+
+                <div class="mb-3">
+                    <div class="d-grid gap-2" style="padding-top: 5%;">
+                        <a href="{{url_for('main.borrarcomentario',type=score[3], variable =score[1] )}}" class="btn btn-secondary">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% endfor %} 
+        {% else %}         
+        <img class = "banner" src=https://cdn.dribbble.com/users/888330/screenshots/2653750/media/b7459526aeb0786638a2cf16951955b1.png>
+        {% endif %}
+    </div>
+{% endblock %}

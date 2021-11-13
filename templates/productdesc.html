@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block cuerpo %}
+
+ <!--------------------------------CONTENIDO DE DESCRIPCION------------------------------->       	
+ 
+ <div class="container mt-5 mb-5">
+    <div class="card">
+        <div class="row g-0">
+            <div class="col-md-5 border-end">
+                <div class="justify-content-center">
+                    <div class="main_image"> <img src={{ product.img }} id="main_product_image" width="500"> </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 right-side">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3>{{ product.nombre }}</h3> 
+                        <!-- <span class="heart"><i class='bx bx-heart'></i></span> -->
+                    </div>
+                    <div class="mt-2 pr-3 content">
+                        <p>{{ product.tipo }}</p>
+                    </div>
+                    <h3 style="text-align: left;">{{ "$%.0f"|format(product.precio|float) }}</h3>
+                    
+                    <!-- <div class="mt-5"> <span class="fw-bold">Color</span>
+                        <div class="colors">
+                            <ul id="marker">
+                                <li id="marker-1"></li>
+                                <li id="marker-2"></li>
+                                <li id="marker-3"></li>
+                                <li id="marker-4"></li>
+                                <li id="marker-5"></li>
+                            </ul>
+                        </div>
+                    </div> -->
+                    <div class="buttons d-flex flex-row mt-5 gap-3"> <a href="{{url_for('main.agregaralista', variable =product.id)}}" class="btn btn-secondary">Agregar a Lista</a> <a href="{{url_for('main.agregaracarro', variable =product.id)}}" class="btn btn-secondary">Agregar a Carro</a> </div>
+                    <!-- <div class="search-option"> <i class='bx bx-search-alt-2 first-search'></i>
+                        <div class="inputs"> <input type="text" name=""> </div> <i class='bx bx-share-alt share'></i>
+                    </div> -->
+                </div>
+                
+              <div class="container" style="padding: 5%;">
+                <h4>Calificar este Producto</h4>
+                <form name="formCalificacion" role="form" method="POST" class="login-form">
+ 
+                  <label for="rating">Score:</label>
+                  <select name="rate">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+
+                    <div class="spacer"></div>
+
+                  <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Comentarios:</label>
+                    <textarea class="form-control" id="formmensaje" rows="3" name="comentario"></textarea>
+                    <p class="warnings" id="warnings3"></p>
+                  </div>
+
+                  <input class="btn btn-secondary" type="submit" name="Calificar">
+                </form>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

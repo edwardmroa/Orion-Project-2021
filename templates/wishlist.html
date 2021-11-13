@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/wishlist.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/miCSS.css') }}">
+
+    
+  </head>
+  <body style="background-image:url('/static/img/wallwish.jpg'); background-size: 1550px;">
+    <div class="container" style="padding-top: 5%; width: 60% ;padding-left: 5%;">
+        <div class="row">
+            <div class="col-md-11 cartier">
+                <div class="titletan">
+                    <div class="row">
+                        <div class="col">
+                            <h4 class="text-center" style="padding-bottom: 2%;"><b>Lista de Deseos</b></h4>
+                        </div>
+                    </div>
+                {% if listadeseo|length >0 %}
+                {% for item in listadeseo %}
+                <div class="row border-top border-bottom">
+                    <div class="row main align-items-center">
+                        <div class="col-2"><img class="img-fluid" src={{ item.producto.img }}></div>
+                        <div class="col">
+                            <div class="row text-muted">{{ item.producto.tipo }}</div>
+                            <div class="row">{{ item.producto.nombre }}</div>
+                        </div>
+                        <!--<div class="col"> <a href="#">-</a><a href="#" class="border">{{ item.cantidad }}</a><a href="#">+</a> </div>-->
+                        <div class="col align-self-center">
+                            <div class="row justify-content-center text-muted">Cantidad</div>
+                            <div class="row justify-content-center">{{ item.cantidad }}</div>
+                        </div>
+                        <div class="col">&dollar;{{ item.subtotal }} <a href= "{{url_for('main.eliminarlistadeseo', variable = item.producto.id)}}"><img class = "img-fluid" style= "width:10%; padding:1%" src= "{{ url_for('static', filename='img/cancel.png') }}" title = "Borrar Item"></div></a>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="text-center">
+                <img style ="width: 50%;"  src=https://www.ovsfashion.com/on/demandware.static/Sites-ovs-spagna-Site/-/default/dw5c078550/images/account/no-wishlist.svg>
+                </div>
+                {% endif %}
+                <div class = "spacer"></div>
+                <a class="back-to-shop text-muted" style= "cursor: pointer;" href= "{{url_for('main.product')}}">&leftarrow;Back to shop</a>
+            </div> <a href = "{{url_for('main.enviaracarrito', variable = listadeseo)}}" class="btn btn-secondary">AGREGAR AL CARRITO</button></a>
+            </div>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>
