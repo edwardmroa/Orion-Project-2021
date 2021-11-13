@@ -181,7 +181,6 @@ def gestion_productos_eliminar():
             mensaje = "Error"
     
     return render_template('crear_productos.html', form=form, titulo="Gestión de Productos", mensaje=mensaje)
-        return "Ocurrió un error, vuelva a intentar"
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
