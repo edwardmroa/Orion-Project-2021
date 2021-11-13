@@ -2,7 +2,7 @@ import os
 import sqlite3
 from sqlite3 import Error
 from flask import Flask, render_template, flash, request, redirect, url_for, session, send_file, current_app, g
-from formulario import RegistroComprador, producto, Login, PerfilUsuario
+from formulario import RegistroComprador, producto, Login, PerfilUsuario, formularioLogin, formularioRegistro, CambioPassword
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from db import get_db, close_db
@@ -10,21 +10,19 @@ from db import get_db, close_db
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
-
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
 
 
 @app.route("/", methods=["GET", "POST"])
-def dashboard():
-
-    return "Home"
+def dashboard(): 
+    return redirect( url_for("login"))
 
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
     form = RegistroComprador()
     if request.method == 'POST':
-        datos = [request.form['cedula'], request.form['nombreCompleto'], request.form['sexo'], request.form['fechaNacimiento'], request.form['direccion'], request.form['ciudad'], request.form['username'], request.form['password'], "Comprador" ]
+        datos = [request.form['cedula'], request.form['nombreCompleto'], request.form['sexo'], request.form['fechaNacimiento'], request.form['direccion'], request.form['ciudad'], request.form['username'], request.form['password'], "Usuario externo" ]
         cedula = datos[0]
         fechaDeNacimiento = datos[3]
         fechaDeNacimiento = fechaDeNacimiento.split("-")
@@ -232,11 +230,44 @@ def login():
     except:
         return render_template('login.html', form=form, titulo='Inicio de sesión')
 
+@app.route('/perfil/<id>', methods=('GET', 'POST'))
+def usuario(id): 
+    if 'rol' in session and 'user_id' in session:
+        if session['rol'] != 'Usuario externo':
+            form = PerfilUsuario()
+            id = session['user_id']
+            db = get_db()
+            orden = "SELECT cedula, nombre,  sexo, fecha_nacimiento,  direccion,ciudad, username,cargo, rol FROM usuarios WHERE id_usuario= ?"
+            data = db.execute(orden, (id,)).fetchone()
+            form.cedula.default = data[0]
+            form.nombreCompleto.default = data[1]
+            form.sexo.default = data[2]
+            form.fechaNacimiento.default =  datetime.strptime(data[3],'%Y-%m-%d')
+            form.direccion.default = data[4]
+            form.ciudad.default = data[5]
+            form.username.default = data[6]
+            form.cargo.default = data[7]
+            form.rol.default = data[8]
+            form.process()
+            if request.method == 'POST':
+                datos = [request.form['cedula'], request.form['nombreCompleto'], request.form['sexo'], request.form['fechaNacimiento'], request.form['direccion'], request.form['ciudad'], request.form['username'], request.form['cargo'], request.form['rol']  ]
+                #if validarDatosDeUsuario("NombreValido",correo,fechaDeNacimiento,celular,identificacion) ==  None:
+                orden = "UPDATE usuarios SET cedula = ?,nombre = ?,sexo =?,fecha_nacimiento = ?,direccion = ?,ciudad = ?,username = ?, cargo = ?, rol = ? WHERE id_usuario = ?"
+                db = get_db()
+                db.execute(orden,(datos[0], datos[1], datos[2], datos[3], datos[4],  datos[5], datos[6], datos[7], datos[8], id))
+                db.commit()
+                db.close()
+                return redirect( url_for( 'usuario', id = id ) )  
+            db.close()
+            return render_template('perfilDeUsuario.html', form=form, titulo='Usuario')
+        return redirect( url_for( 'usuarioLocal' ) ) 
+    else:
+        return redirect( url_for( 'dashboard' ) )   
 
-@app.route('/perfil', methods=('GET', 'POST'))
-def usuario( ): 
-    form = PerfilUsuario()
-    if session['user_id'] !=None:
+@app.route('/perfil/', methods=('GET', 'POST'))
+def usuarioLocal(): 
+    if 'rol' in session and 'user_id' in session:
+        form = PerfilUsuario()
         id = session['user_id']
         db = get_db()
         orden = "SELECT cedula, nombre,  sexo, fecha_nacimiento,  direccion,ciudad, username,cargo, rol FROM usuarios WHERE id_usuario= ?"
@@ -259,13 +290,49 @@ def usuario( ):
             db.execute(orden,(datos[0], datos[1], datos[2], datos[3], datos[4],  datos[5], datos[6], datos[7], datos[8], id))
             db.commit()
             db.close()
+            return redirect( url_for( 'usuarioLocal' ) ) 
         db.close()
-    return render_template('perfilDeUsuario.html', form=form, titulo='Usuario')
+        return render_template('perfilDeUsuario.html', form=form, titulo='Usuario')
+    else:
+        return redirect( url_for( 'dashboard' ) )  
+
+@app.route('/perfil/password', methods=('GET', 'POST'))
+def cambioContraseña( ): 
+    if 'user_id' in session:
+        form = CambioPassword()
+        if request.method == 'POST':
+            nueva = request.form['nueva'] 
+            actual = request.form['actual'] 
+            confirmacion = request.form['confirmacion']
+            if nueva == confirmacion: 
+                db = get_db()
+                username = session['user_name']
+                original = db.execute(
+                'SELECT * FROM usuarios WHERE username = ?  ', (username, ) 
+                ).fetchone()
+                r = check_password_hash(original[8] , actual)
+                print("WWWWWWWWWWWWWWWWWWWWWWWWWW")
+                if r:
+                    db = get_db()
+                    print("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ")
+                    db.execute("UPDATE usuarios SET password = ? WHERE username = ?",(generate_password_hash(nueva),username,))
+                    db.commit()
+                db.close()
+        return render_template('cambioPassword.html', form=form, titulo='Cambio de contraseña')
+    else:
+        return redirect( url_for( 'dashboard' ) ) 
+
   
 @app.route( '/logout' )
 def logout():
     session.clear()
     return redirect( url_for( 'dashboard' ) )   
+
+@app.route( '/loginwtf' )
+def loginwtf():
+    formlogin = formularioLogin()
+    formregister = formularioRegistro()
+    return  render_template('loginwtf.html', formlogin= formlogin, formregister=formregister)  
 
 if (__name__ == "__main__"):
     app.run(debug=True)

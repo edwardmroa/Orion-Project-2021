@@ -26,6 +26,13 @@
 
     <!-- MaterialDark CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/material.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/miCSS.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/miEstilo.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/shopping.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/whislit.css') }}"/>
 </head>
 <body>
 
@@ -40,19 +47,19 @@
         </ul>      
     </div> -->
 
-    <nav>
-        <div class="nav-wrapper indigo darken-1">
-        <a href="/" class="brand-logo center">Orion</a>
-        <ul id="nav-mobile" class="left">
-            <li style="padding:0 5px;">{{ session['user_name'] }}</li>
-            </ul>
-          <ul id="nav-mobile" class="right">
-            <li><a href="/pedido" class="tooltipped waves-effect waves-light " data-position="bottom" data-delay="50" data-tooltip="Pedido"><i class="zmdi zmdi-shopping-cart"></i></a></li>
-            <li><a href="/listadeseos" class="tooltipped waves-effect waves-light " data-position="bottom" data-delay="50" data-tooltip="Lista de Deseos"><i class="zmdi zmdi-card-giftcard"></i></a></li>
-            <li><a href="/logout" class="tooltipped waves-effect waves-light btn-ExitSystem" data-position="bottom" data-delay="50" data-tooltip="Cerrar Sesion"><i class="zmdi zmdi-power"></i></a></li>
-            </ul>
-        </div>
-      </nav>
+        <nav>
+            <div class="nav-wrapper grey darken-4">
+            <a href="/" class="brand-logo center">Orion</a>
+            <ul id="nav-mobile" class="left">
+                <li style="padding:0 5px;">{{ session['user_name'] }}</li>
+                </ul>
+              <ul id="nav-mobile" class="right">
+                <li><a href="/pedido" class="tooltipped waves-effect waves-light " data-position="bottom" data-delay="50" data-tooltip="Pedido"><i class="zmdi zmdi-shopping-cart"></i></a></li>
+                <li><a href="/listadeseos" class="tooltipped waves-effect waves-light " data-position="bottom" data-delay="50" data-tooltip="Lista de Deseos"><i class="zmdi zmdi-card-giftcard"></i></a></li>
+                <li><a href="/logout" class="tooltipped waves-effect waves-light btn-ExitSystem" data-position="bottom" data-delay="50" data-tooltip="Cerrar Sesion"><i class="zmdi zmdi-power"></i></a></li>
+                </ul>
+            </div>
+          </nav>
 
     <div class="row">
         <!-- Tiles -->
@@ -62,6 +69,28 @@
         </article>
     </div>
 
+    <footer class="page-footer grey darken-4">
+        <div class="container">
+          <div class="row">
+            <div class="col l6 s12">
+              <h5 class="white-text">Footer Content</h5>
+              <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+            </div>
+            <div class="col l4 offset-l2 s12">
+              <h5 class="white-text">Links</h5>
+              <ul>
+                <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="footer-copyright">
+          <div class="container">
+          © 2014 Copyright Text
+          <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+          </div>
+        </div>
+      </footer>
     
     <!-- Sweet Alert JS -->
     <script src="{{ url_for('static', filename='js/sweetalert.min.js') }}"></script>
@@ -79,5 +108,6 @@
     
     <!-- MaterialDark JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
 </body>
 </html>

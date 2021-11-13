@@ -1,19 +1,26 @@
 {% extends "base.html" %}
 {% block contenido %}
-    <div class="col s8 offset-s1 m3 offset-m3 l4 offset-l4">
-    <br>
-    <figure><img src="{{ url_for('static', filename='assets/img/logo.png') }}" alt="UserImage" height="300rem"></figure>
+        <div class="col s12">
+        <div class="col s12 m6 l2 offset-l2">
+        <br><br>
+        <figure><img src="{{ url_for('static', filename='assets/img/logo.png') }}" alt="UserImage" height="300rem"></figure>
+        </div>
+        
+
+        <div class="col s12 m6 l5 offset-l1">
+            <br><br>
+            <h5 style="text-align: center;">Inicia Sesión</h5>
+            <p style="text-align: center;">Ingresa Usuario y Contraseña</p>             
+            <form action="" method="post" name="formInicioSesion">
+            {{ form.username.label }} 
+            {{ form.username }}   
+            {{ form.password.label }} 
+            {{ form.password }}   
+            <p>
+                <button type="submit" id="guardarCambios">Iniciar Sesion</button>
+            </p> 
+        </form>
     </div>
-    <div class="col s12 m6 offset-m3 ">
     
-    <form action="" method="post" name="formInicioSesion">
-    {{ form.username.label }} 
-    {{ form.username }}   
-    {{ form.password.label }} 
-    {{ form.password }}   
-    <p>
-        <button type="submit" id="guardarCambios">Iniciar Sesion</button>
-    </p> 
-    </form>
-</div>
+        </div>
 {% endblock %}

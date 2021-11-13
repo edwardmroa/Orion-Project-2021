@@ -67,7 +67,6 @@
                                             {{ form.rol(class="browser-default") }} 
                                         </p> 
                                     {% endif %} 
-
                                     <button class="btn waves-effect waves-light" type="submit" style="display: none" id="guardarCambios" onsubmit="deshabilitarCampos(true)">Guardar Cambios</button>
                                     
                                 </div>
@@ -90,7 +89,14 @@
                                     }
                                 </script>
                             </form>
-                            
+                            <form action="{{ url_for('cambioContraseña') }}">
+                                {% if request.path == "/perfil/" or request.path == "/perfil" %}   
+                                <p> 
+                                    <button class="btn waves-effect waves-light" type="submit">Cambiar contraseña</button>
+                                </p>
+                                {% endif %}
+                            </form> 
+
                         </div>
                     </div>
                 </div>

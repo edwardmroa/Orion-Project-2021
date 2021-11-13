@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField,  IntegerField, SelectField, DateField, FloatField
 #from wtforms.fields.html5 import DecimalField, EmailField
 from wtforms.fields.simple import TextAreaField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, EqualTo, InputRequired, Length, Regexp
 
 class RegistroComprador(FlaskForm):
     cedula = StringField('Cédula', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su cédula"})
@@ -46,6 +46,23 @@ class PerfilUsuario(FlaskForm):
     direccion = StringField('Direccion', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su direccion de residencia","disabled":"true"})
     ciudad = StringField('Ciudad', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su direccion de residencia","disabled":"true"})
     username = StringField('Usuario', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su usuario","disabled":"true"})
-    cargo = StringField('Usuario', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su usuario","disabled":"true"})
+    cargo = StringField('Cargo', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite el cargo","disabled":"true"})
     rol = SelectField(u'Rol', choices=[('Super administrador', 'Super administrador'), ('Usuario interno', 'Usuario interno'), ('Usuario externo', 'Usuario externo')], render_kw = {"disabled":"true"})
-     
+
+class formularioLogin(FlaskForm):
+    logusuario= StringField('Usuario', validators=[InputRequired(message='Este campo no puede estar vacío'), Regexp('^\w+$',message='No usar caracteres especiales')])
+    logclave= PasswordField('Contraseña', validators=[InputRequired(message='Este campo no puede estar vacío'), Regexp('^\w+$',message='No usar caracteres especiales')])
+    enviar = SubmitField('INICIAR SESIÓN')
+    
+class formularioRegistro(FlaskForm):
+    regnombre = StringField('Nombre', validators=[InputRequired(message='Este campo no puede estar vacío'), Length(min=5,max=16, message = 'Este campo debe tener entre 5 y 10 caracteres'), Regexp('^[a-zA-Z0-9\s]+$',message='No usar caracteres especiales')])
+    regusuario = StringField('Usuario', validators=[InputRequired(message='Este campo no puede estar vacío'), Length(min=5,max=12, message = 'Este campo debe tener entre 5 y 10 caracteres'), Regexp('^\w+$',message='No usar caracteres especiales')])
+    regclave = PasswordField('Contraseña', validators=[InputRequired(message='Este campo no puede estar vacío'), Length(min=5,max=12, message = 'Este campo debe tener entre 5 y 10 caracteres'), Regexp('^\w+$',message='No usar caracteres especiales')])
+    regclave2 = PasswordField('Confirmar Contraseña', validators=[InputRequired(message='Este campo no puede estar vacío'),EqualTo('regclave', message='Contraseñas deben ser iguales'), Regexp('^\w+$',message='No usar caracteres especiales')])
+    registrarse = SubmitField('REGISTRATE')
+
+class CambioPassword(FlaskForm):
+    actual = PasswordField('Contraseña actual', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite su contraseña actual"})
+    nueva = PasswordField('Contraseña nueva', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite la nueva contraseña"})
+    confirmacion = PasswordField('Confirme su nueva contraseña', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Confirme su nueva contraseña"})
+    guardar = SubmitField('GUARDAR')

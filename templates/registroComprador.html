@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 {% block contenido %}
-    <centre>
-    
+
+    <div class="col s12 m6 offset-m3 ">
+        <br>
+        <h4 style="text-align: center;">Registrate</h4>
+                                <p style="text-align: center;">Ingresa tus datos</p>
     <form action="" method="post" name="formRegistroComprador">
     <p>
         {{ form.cedula.label }} 
@@ -36,10 +39,10 @@
         {{ form.password }} 
     </p>  
     <p>
-        <button type="submit" id="guardarCambios">Registrarse</button>
+        <button class="btn" type="submit" id="guardarCambios">Registrarse</button>
     </p> 
     </form>
-    </centre>
+    </div>
         
 
 {% endblock %}
