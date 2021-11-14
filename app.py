@@ -3,7 +3,7 @@ import sqlite3
 from sqlite3 import Error
 from flask import Flask, render_template, flash, request, redirect, url_for, session, send_file, current_app, g
 from wtforms.validators import Length
-from formulario import RegistroComprador, producto, Login, PerfilUsuario, formularioLogin, formularioRegistro, CambioPassword, EliminarCuenta, RegistrarOperario, ListarOperarios
+from formulario import RegistroComprador, producto, Login, PerfilUsuario, formularioLogin, formularioRegistro, CambioPassword, EliminarCuenta, RegistrarOperario, ListarOperarios, lote
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from db import get_db, close_db
@@ -70,7 +70,6 @@ def gestion_productos_consulta():
             cur.execute("SELECT * FROM productos")
             row = cur.fetchall()
             rowtemp = []
-            print("ROL= " + session['rol'])
             if(nombre_producto == '' and id_producto == 'None'):
 
                 return render_template('consulta_productos.html', form=form, titulo="Gestión de Productos", row=row,session=session['rol'])
@@ -141,7 +140,7 @@ def gestion_productos_actualizar():
     precio = form.precio.data
     promocion = form.promocion.data
     if(str(form.aplica_descuento.data) == "1"):
-        print("pasa if")
+
         aplica_descuento = True
     else:
         aplica_descuento = False
@@ -179,8 +178,186 @@ def gestion_productos_eliminar():
             print(Error)
             mensaje = "Error"
     
-    print(session['rol'])
     return render_template('crear_productos.html', form=form, titulo="Gestión de Productos", mensaje=mensaje,session=session['rol'])
+
+@app.route("/gestion_lote",methods=["GET", "POST"])
+def gestion_lotes():
+    if not session['rol']=='Usuario externo':
+        form = lote()
+        return render_template('crud_lotes.html', form=form, titulo="Gestión de Lotes")
+    else:
+        return "Usuario no Autorizado"
+
+@app.route("/gestion_lote/crear", methods=["GET", "POST"])
+def gestion_lotes_creacion():
+    if not session['rol']=='Usuario externo':
+        form = lote()
+        id_lote = form.id_lote.data
+        id_producto = form.id_producto.data
+        qty_lote = form.qty_lote.data
+        fecha_ingreso = form.fecha_ingreso.data
+
+        with sqlite3.connect("db.db") as con:
+            try:
+                    cur = con.cursor()
+                    cur.execute("INSERT INTO lotes (id_lote,id_producto,qty_lote,fecha_ingreso) VALUES (?,?,?,?)",
+                                (id_lote, id_producto, qty_lote, fecha_ingreso))
+                    con.commit()
+                    cur.execute("SELECT qty FROM productos WHERE id_producto=?",(id_producto,))
+                    row= cur.fetchone()
+                    print(row)
+                    row= int(row[0])+int(qty_lote)
+                    cur.execute("UPDATE productos SET qty = ? WHERE id_producto = ?",[row,id_producto])
+                    mensaje = "Guardado exitoso"
+            except Error:
+                print(Error)
+                con.rollback()
+                mensaje = "Ocurrió un error con el guardado del lote"
+            return render_template('crear_lotes.html', form=form, titulo="Gestión de Lotes", mensaje=mensaje,session=session['rol'])
+    else:
+        return "Usuario no autorizado"
+
+@app.route("/gestion_lote/consulta",methods=["GET","POST"])
+def gestion_lotes_consulta():
+    if not session['rol']=='Usuario externo':
+        form = lote()
+        id_lote = str(form.id_lote.data)
+        id_producto = str(form.id_producto.data)
+
+
+        with sqlite3.connect("db.db") as con:
+            
+            try:
+                con.row_factory = sqlite3.Row
+                cur = con.cursor()
+                cur.execute("SELECT * FROM lotes")
+                row = cur.fetchall()
+                rowtemp = []
+                if(id_lote == 'None' and id_producto == 'None'):
+                    return render_template('consulta_lotes.html', form=form, titulo="Gestión de Lotes", row=row)
+                elif(id_lote == 'None'):
+
+                    for r in row:
+                        if (id_producto in str(r['id_producto'])):
+                            rowtemp.append(r)
+                    return render_template('consulta_lotes.html', form=form, titulo="Gestión de Lotes", row=rowtemp)
+                elif(id_producto=="None"):
+
+                    for r in row:
+                        if(id_lote in r['id_lote']):
+                            rowtemp.append(r)
+                    return render_template('consulta_lotes.html', form=form, titulo="Gestión de Lotes", row=rowtemp)
+                else:
+                    for r in row:
+                        if(id_lote in r['id_lote'] and id_producto in str(r['id_producto'])):
+                            rowtemp.append(r)
+                    return render_template('consulta_lotes.html', form=form, titulo="Gestión de Lotes", row=rowtemp)                
+            except Error:
+                print(Error)
+                return "Ha ocurrido un error con la consulta"
+
+    else:
+        return "Usuario no autorizado"
+
+@app.route("/gestion_lote/actualizar", methods=["GET", "POST"])
+def gestion_lotes_actualizar():
+    form = lote()
+    id_producto = form.id_producto.data
+    id_lote = form.id_lote.data
+    qty_lote = form.qty_lote.data
+    fecha_ingreso = str(form.fecha_ingreso.data)
+
+    
+    with sqlite3.connect("db.db") as con:
+        try:
+                cur = con.cursor()
+                cur.execute("SELECT qty_lote FROM lotes WHERE id_lote = ?",(id_lote,))
+                qty_lote_old = cur.fetchone()
+                cur.execute("SELECT id_producto FROM lotes WHERE id_lote = ?",(id_lote,))
+                id_producto_old = cur.fetchone()
+                cur.execute("SELECT fecha_ultima_compra FROM lotes WHERE id_lote = ?",(id_lote,))
+                fuc = cur.fetchone()
+                if (fuc[0]=='None'):
+
+                    if str(id_producto_old[0])==str(id_producto):
+                        diff_qty=int(qty_lote_old[0])-int(qty_lote)
+                        cur.execute("SELECT qty FROM productos WHERE id_producto = ?",(id_producto,))
+                        qty_producto= cur.fetchone()                    
+                        
+                        qty_producto_nuevo = int(qty_producto[0]) - diff_qty
+
+                        cur.execute("UPDATE productos SET qty= ? WHERE id_producto = ?",
+                                [qty_producto_nuevo, id_producto])
+
+                        cur.execute("UPDATE lotes SET qty_lote= ?, fecha_ingreso = ? WHERE id_lote = ?",
+                                [qty_lote, fecha_ingreso, id_lote])
+
+                    else:
+                        print("Entra Else")
+                        cur.execute("SELECT qty FROM productos WHERE id_producto = ?",(id_producto_old[0],))
+                        print("Pasa primer select")
+                        qty_producto= cur.fetchone()
+                        qty_producto=int(qty_producto[0])-qty_lote
+                        cur.execute("UPDATE productos SET qty= ? WHERE id_producto = ?",
+                                [qty_producto, id_producto_old[0]])
+                        print("Pasa primer Update")
+                        cur.execute("UPDATE lotes SET qty_lote= ?, fecha_ingreso = ?, id_producto = ? WHERE id_lote = ?",
+                                [qty_lote, fecha_ingreso, id_producto, id_lote])
+                        print("Pasa Segundo Update")
+                        cur.execute("SELECT qty FROM productos WHERE id_producto=?",(id_producto,))
+                        row= cur.fetchone()
+                        print("Pasa select")
+                        row= int(row[0])+int(qty_lote)
+                        cur.execute("UPDATE productos SET qty = ? WHERE id_producto = ?",[row,id_producto])
+                        print("Pasa ultimo Update")
+                    con.commit()
+                    mensaje = "Actualización exitosa"
+                else:
+                    mensaje="No se puede actualizar ya que el lote ya hizo un movimiento"
+                
+
+        except Error:
+            print(Error)
+            con.rollback()
+            mensaje = "Ocurrió un error con la actualización del producto"
+        return render_template('crear_lotes.html', form=form, titulo="Gestión de Productos", mensaje=mensaje)
+
+@app.route("/gestion_lote/eliminar", methods=["GET", "POST"])
+def gestion_lotes_eliminar():
+    form = lote()
+    id_lote = form.id_lote.data
+    
+    with sqlite3.connect("db.db") as con:
+        try:
+                cur = con.cursor()
+                cur.execute("SELECT qty_lote FROM lotes WHERE id_lote = ?",(id_lote,))
+                qty_lote = cur.fetchone()
+                cur.execute("SELECT id_producto FROM lotes WHERE id_lote = ?",(id_lote,))
+                id_producto = cur.fetchone()
+                cur.execute("SELECT fecha_ultima_compra FROM lotes WHERE id_lote = ?",(id_lote,))
+                fuc = cur.fetchone()
+                if (fuc[0]=='None'):
+
+                    cur.execute("SELECT qty FROM productos WHERE id_producto = ?",(id_producto[0],))
+                    qty_producto= cur.fetchone()
+                    qty_producto=int(qty_producto[0])-qty_lote
+                    cur.execute("UPDATE productos SET qty= ? WHERE id_producto = ?",
+                            [qty_producto, id_producto[0]])
+                    cur.execute("DELETE FROM lotes WHERE id_lote = ?",
+                            [id_lote])
+                    con.commit()
+                    mensaje = "Eliminación exitosa"
+                else:
+                    mensaje="No se puede eliminar ya que el lote ya hizo un movimiento"
+                
+
+        except Error:
+            print(Error)
+            con.rollback()
+            mensaje = "Ocurrió un error con la eliminació del lote"
+        return render_template('crear_lotes.html', form=form, titulo="Gestión de Lotes", mensaje=mensaje)
+
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

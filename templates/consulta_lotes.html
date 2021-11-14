@@ -1,0 +1,32 @@
+{%extends 'crud_lotes.html'%} {%block bloque%}
+
+<center><h2>Listado de productos</h2></center>
+
+<table
+  style="width: 90%; text-align: center"
+  id="tabla"
+  border="1"
+  align="center"
+>
+  
+    <thead style="text-align: center">
+      <th style="text-align: center">ID del lote</th>
+      <th style="text-align: center">ID del Producto</th>
+      <th style="text-align: center">Qty del lote</th>
+      <th style="text-align: center">Fecha de Ingreso</th>
+      <th style="text-align: center">Fecha de última compra</th>
+    </thead>
+    <tbody style="text-align: center">
+    {% for r in row %}
+    <tr>
+      <td style="text-align: center">{{ r ["id_lote"] }}</td>
+      <td style="text-align: center">{{ r ["id_producto"] }}</td>
+      <td style="text-align: center">{{ r ["qty_lote"] }}</td>
+      <td style="text-align: center">{{ r ["fecha_ingreso"] }}</td>
+      <td style="text-align: center">{{ r ["fecha_ultima_compra"] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{%endblock%}

@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask.templating import render_template
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField,  IntegerField, SelectField, DateField, FloatField
@@ -86,3 +87,13 @@ class RegistrarOperario(FlaskForm):
     password = PasswordField('Contraseña', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite la contraseña"})
     cargo = StringField('Cargo', validators=[DataRequired(message='No dejar vacío, completar')], render_kw = {"placeholder": "Digite el cargo"})
     
+class lote(FlaskForm):
+    id_lote = IntegerField('ID del lote',render_kw={"placeholder":"Ingrese el ID"})
+    id_producto = IntegerField('ID del producto',render_kw={"placeholder":"Ingrese el ID"})
+    qty_lote = IntegerField('Cantidad del lote', render_kw={"placeholder":"Ingrese la cantidad disponible"})
+    fecha_ingreso = DateField('Fecha de ingreso',render_kw={"placeholder":"AAAA-MM-DD"},default=datetime.today,format="%Y-%m-%d")
+    fecha_ultima_compra = DateField('Fecha de ultima compra',render_kw={"placeholder":"AAAA-MM-DD"},default=datetime.today,format="%Y-%m-%d")
+    listar = SubmitField( 'Listar', render_kw={"onmouseover": "listarLote()", "class":"form_boton"})
+    eliminar = SubmitField( 'Eliminar', render_kw={"onmouseover": "eliminarLote()", "class":"form_boton"})
+    actualizar = SubmitField( 'Actualizar', render_kw={"onmouseover": "actualizarLote()","class":"form_boton"})
+    crear = SubmitField( 'Crear', render_kw={"onmouseover": "crearLote()","class":"form_boton"})

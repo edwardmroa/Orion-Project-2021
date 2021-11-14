@@ -1,0 +1,104 @@
+{%extends 'base.html'%} 
+
+{%block contenido%}
+
+<center><h1 style="align-items: center">Gestión de Lotes</h1></center>
+<form
+  id="formulario"
+  method="post"
+  name="crud_Lotes"
+  style="align-items: center; width: 100%; height: 100%"
+>
+  <div class="bloque_formulario">
+    <p
+      style="
+        float: left;
+        background-color: rgb(141, 141, 141);
+        padding: 10px;
+        width: 30%;
+      "
+    >
+      {{form.id_lote.label(class="form_productos")}}
+      {{form.id_lote(class="form_productos")}}
+    </p>
+    <p
+      style="
+        float: left;
+        background-color: rgb(141, 141, 141);
+        padding: 10px;
+        width: 30%;
+      "
+    >
+      {{form.id_producto.label(class="form_productos")}}
+      {{form.id_producto(class="form_productos")}}
+    </p>
+    <p
+      style="
+        float: left;
+        background-color: rgb(141, 141, 141);
+        padding: 10px;
+        width: 30%;
+      "
+    >
+      {{form.qty_lote.label(class="form_productos")}}
+      {{form.qty_lote(class="form_productos")}}
+    </p>
+    <p
+      style="
+        float: left;
+        background-color: rgb(141, 141, 141);
+        padding: 10px;
+        width: 30%;
+      "
+    >
+      {{form.fecha_ingreso.label(class="form_productos")}}
+      {{form.fecha_ingreso(class="form_productos")}}
+    </p>
+
+    <p
+      style="
+        float: left;
+        background-color: rgb(141, 141, 141);
+        padding: 10px;
+      "
+    >
+        {{form.listar(class="form_button waves-effect waves-light btn")}}
+    </p>
+    
+
+    <p
+    style="
+      float: left;
+      background-color: rgb(141, 141, 141);
+      padding: 10px;
+    "
+  >
+      {{form.eliminar(class="form_button waves-effect waves-light btn")}}
+  </p>
+  <p
+  style="
+    float: left;
+    background-color: rgb(141, 141, 141);
+    padding: 10px;
+  "
+>
+    {{form.actualizar(class="form_button waves-effect waves-light btn")}}
+</p>
+<p
+style="
+  float: left;
+  background-color: rgb(141, 141, 141);
+  padding: 10px;
+"
+>
+  {{form.crear(class="form_button waves-effect waves-light btn")}}
+</p>
+
+  </div>
+</form>
+
+{%block bloque%} {%endblock%}
+
+<script src="{{ url_for('static', filename='js/funciones.js') }}"></script>
+{%endblock%}
+
