@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block contenido %}
+ 
+  <div class="container" style="margin-bottom: 128px;">
+      <div class="row">
+          <h2 class="center-align">Lista de usuarios internos </h2>
+          <form action="" method="post" class="center-align">
+            {{ form.hidden_tag() }}
+            <p>
+              {{ form.busqueda(size=30) }}<br />
+            </p>
+            <p>{{ form.enviar(class_="waves-effect waves-light btn") }}</p>
+          </form>
+          <div class="col s12">
+              <table class="striped">
+                  <thead>
+                      <tr> 
+                          <th data-field="cedula">Cédula</th>
+                          <th data-field="nombreyapellido">Nombres</th>
+                          <th data-field="Username">Username</th>
+                          <th data-field="Cargo">Cargo</th>
+                          <th data-field="Opciones">Opciones</th>                         
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {% for us in usuarios %}
+                    <tr>
+                      <td ><a href="/dashboard/internos/{{ us[0] }}">{% print(us[1]) %}</a></td> 
+                      <td >{% print(us[2]) %}</td>  
+                      <td >{% print(us[3]) %}</td>
+                      <td >{% print(us[4]) %}</td>
+                      <td>
+                        <a href="/dashboard/internos/{{ us[0] }}/update"><i class="zmdi zmdi-edit zmdi-hc-lg" style="margin:10px"></i></a>
+                        <a href="/dashboard/internos/{{ us[0] }}/delete"><i class="zmdi zmdi-delete zmdi-hc-lg"></i></a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+          <div>
+          <a href="/dashboard/internos/registro"><button type="submit" class="waves-effect waves-light btn">Crear Usuario</button></a>
+        </div>
+      </div>
+  </div>
+  {% endblock %}

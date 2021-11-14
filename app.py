@@ -3,7 +3,7 @@ import sqlite3
 from sqlite3 import Error
 from flask import Flask, render_template, flash, request, redirect, url_for, session, send_file, current_app, g
 from wtforms.validators import Length
-from formulario import RegistroComprador, producto, Login, PerfilUsuario, formularioLogin, formularioRegistro, CambioPassword, EliminarCuenta, RegistrarOperario, ListarOperarios, lote,Comentarios
+from formulario import RegistroComprador, producto, Login, PerfilUsuario, formularioLogin, formularioRegistro, CambioPassword, EliminarCuenta, RegistrarOperario, ListarOperarios, lote,Comentarios, GestionCompradores
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from db import get_db, close_db
@@ -18,6 +18,13 @@ app.config['SECRET_KEY'] = SECRET_KEY
 @app.route("/", methods=["GET", "POST"])
 def dashboard(): 
     return render_template('Home.html')
+
+@app.route("/dashboard", methods=["GET", "POST"])
+def dashboardAdministrativo(): 
+    if 'rol' in session:
+        if session['rol'] != "Usuario externo":
+            return render_template('dashboard.html')
+    return redirect( url_for( 'dashboard' ) ) 
 
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
@@ -363,26 +370,14 @@ def gestion_lotes_eliminar():
 def login():
     form = Login()
     try:
+        if 'user_id' in session:
+            return redirect( url_for( 'dashboard' ) )     
         if request.method == 'POST':
             db = get_db()
             error = None
             username = request.form['username']
             password = request.form['password']
             error = None
-            # if not username:
-            #     error = 'Debes ingresar el usuario'
-            #     flash( error )
-
-            # #if not validacion.isUsernameValid(username):
-            #     error = "El usuario debe ser alfanumerico o incluir solo '.','_','-'"
-            #     flash(error)
-
-            # #if not password:
-            #     error = 'Contraseña requerida'
-            #     flash( error )
-            
-            print(password)
-            print(generate_password_hash(password))
             user = db.execute(
                 'SELECT * FROM usuarios WHERE username = ?  and Estado= "Activo"', (username, ) 
             ).fetchone()
@@ -402,7 +397,7 @@ def login():
                     session['user_id'] = user[0]
                     session['user_name'] = user[7]
                     session['rol'] = user[10]
-                    return redirect( url_for( 'dashboard' ) ) 
+                    return redirect( url_for( 'dashboardAdministrativo' ) ) 
                     
         return render_template('login.html', form=form, titulo='Inicio de sesión')
     except:
@@ -574,6 +569,33 @@ def dashboardUsuarioInterno( ):
         return redirect( url_for( 'dashboard' ) )
     else:
         return redirect( url_for( 'dashboard' ) ) 
+
+# @app.route('/dashboard/externos', methods=('GET', 'POST'))
+# def dashboardUsuarioExterno( ): 
+#     if 'user_id' in session:
+#         if session['rol'] != 'Usuario externo':
+#             form = GestionCompradores()
+#             db = get_db()
+#             usuarios = db.execute( 'SELECT id_usuario,cedula,nombre,username,cargo FROM usuarios WHERE rol = "Usuario externo" and Estado="Activo"').fetchall()
+#             if request.method=='POST': 
+#                 codigo = request.form['codigo']
+#                 ciudad = request.form['ciudad']
+#                 sexo = request.form['sexo']
+#                 rangoMinimo = request.form['rangoMinimo']
+#                 rangoMaximo = request.form['rangoMaximo']
+#                 rangoMinimoAC = request.form['rangoMinimoAC']
+#                 rangoMaximoAC = request.form['rangoMaximoAC']
+#                 fechaMayor = request.form['fechaMayor']
+#                 fechaMenor = request.form['fechaMenor']
+#                 if cedula.isdigit():
+#                     for us in reversed(usuarios):
+#                         cedulaUsuario = str(us[1])
+#                         if not cedula in cedulaUsuario:
+#                             usuarios.remove(us)
+#             return render_template('dashboard_gestion_internos.html', usuarios = usuarios, form=form)
+#         return redirect( url_for( 'dashboard' ) )
+#     else:
+#         return redirect( url_for( 'dashboard' ) ) 
 
 @app.route('/dashboard/comentarios', methods=('GET', 'POST'))
 def dashboardComentarios( ): 

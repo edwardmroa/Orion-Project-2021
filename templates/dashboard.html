@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block contenido %}
+<br>
+<h4 class="center-align">Dashboard administrativo</h4>
+<br>
+<div class="row">
+    <div class="col s6 m4 l3">
+        <div class="card blue-grey darken-1">
+          <div class="card-action">
+            <a href="gestion_productos" class="white-text center-align">Gestión de productos</a>
+          </div>
+        </div>
+    </div>
+    <div class="col s6 m4 l3">
+        <div class="card blue-grey darken-1">
+          <div class="card-action">
+            <a href="/gestion_lote" class="white-text center-align">Gestión de lotes</a>
+          </div>
+        </div>
+    </div>
+    <div class="col s6 m4 l3">
+      <div class="card blue-grey darken-1">
+        <div class="card-action">
+          <a href="/dashboard/comentarios" class="white-text center-align">Gestión de comentarios</a>
+        </div>
+      </div>
+    </div>
+    <div class="col s6 m4 l3">
+        <div class="card blue-grey darken-1">
+          <div class="card-action">
+            <a href="/dashboard/internos" class="white-text center-align">Gestión de usuarios internos (Solo acceso superadministrador)</a>
+          </div>
+        </div>
+    </div>
+    <div class="col s6 m4 l3">
+        <div class="card blue-grey darken-1">
+          <div class="card-action">
+            <a href="/dashboard/internos" class="white-text center-align">Gestión de usuarios compradores</a>
+          </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}

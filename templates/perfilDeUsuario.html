@@ -90,7 +90,7 @@
                                 </script>
                             </form>
                         </div>
-                        <div class="col s6">
+                        <div class="col s12">
                             <form action="{{ url_for('cambioContraseña') }}">
                                 {% if request.path == "/perfil/" or request.path == "/perfil" %}   
                                 <p> 
@@ -99,6 +99,7 @@
                                 {% endif %}
                             </form> 
                         </div>
+                        <div class="col s12">
                         <form action="{{ url_for('dashboardUsuarioInterno') }}"> 
                             {% if session['rol'] == "Super administrador"  %}  
                             <p>
@@ -106,7 +107,8 @@
                             </p> 
                             {% endif %}
                         </form> 
-                        <div class="col s6">
+                    </div>
+                        <div class="col s12">
                             <form action="{{ url_for('eliminarPerfil') }}">
                                 {% if request.path == "/perfil/" or request.path == "/perfil" %}   
                                 <p> 
