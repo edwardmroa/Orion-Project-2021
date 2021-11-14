@@ -25,6 +25,9 @@
     float: left;
     height: 30px;
     width: 80px;
+    font-size: 10px;
+    text-align: center;
+    padding-left: inherit;
 }
 
 

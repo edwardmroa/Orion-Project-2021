@@ -32,7 +32,7 @@
       {{form.nombre_producto.label(class="form_productos")}}
       {{form.nombre_producto(class="form_productos")}}
     </p>
-
+    {% if not session=='Usuario externo' %}
     <p
       style="
         float: left;
@@ -66,6 +66,7 @@
       {{form.aplica_descuento.label(class="form_productos")}}
       {{form.aplica_descuento(class="browser-default")}}
     </p>
+    {% endif %}
     <p
       style="
         float: left;
@@ -73,8 +74,10 @@
         padding: 10px;
       "
     >
-        {{form.listar(class="form_button")}}
+        {{form.listar(class="form_button waves-effect waves-light btn")}}
     </p>
+    
+    {% if not session=='Usuario externo' %}
     <p
     style="
       float: left;
@@ -82,7 +85,7 @@
       padding: 10px;
     "
   >
-      {{form.eliminar(class="form_button")}}
+      {{form.eliminar(class="form_button waves-effect waves-light btn")}}
   </p>
   <p
   style="
@@ -91,7 +94,7 @@
     padding: 10px;
   "
 >
-    {{form.actualizar(class="form_button")}}
+    {{form.actualizar(class="form_button waves-effect waves-light btn")}}
 </p>
 <p
 style="
@@ -100,8 +103,9 @@ style="
   padding: 10px;
 "
 >
-  {{form.crear(class="form_button")}}
+  {{form.crear(class="form_button waves-effect waves-light btn")}}
 </p>
+{% endif%}
   </div>
 </form>
 

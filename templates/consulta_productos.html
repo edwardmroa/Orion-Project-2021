@@ -8,23 +8,25 @@
   border="1"
   align="center"
 >
-  <tbody style="text-align: center">
-    <tr style="text-align: center">
-      <td style="text-align: center">ID</td>
-      <td style="text-align: center">Nombre</td>
-      <td style="text-align: center">Qty</td>
-      <td style="text-align: center">Unidad</td>
-      <td style="text-align: center">Precio</td>
-      <td style="text-align: center">% de Promoción</td>
-      <td style="text-align: center">Calificacion</td>
-      <td style="text-align: center">Categoria</td>
-      <td style="text-align: center">Aplica el descuento</td>
-      <!-- Condicional de sesión -->
-      <td style="text-align: center"># de Ventas</td>
-      <td style="text-align: center">Total de ventas</td>
-      <td style="text-align: center">Total descontado</td>
-      <td style="text-align: center">Dado de Baja</td>
-    </tr>
+  
+    <thead style="text-align: center">
+      <th style="text-align: center">ID</th>
+      <th style="text-align: center">Nombre</th>
+      <th style="text-align: center">Qty</th>
+      <th style="text-align: center">Unidad</th>
+      <th style="text-align: center">Precio</th>
+      <th style="text-align: center">% de Promoción</th>
+      <th style="text-align: center">Calificacion</th>
+      <th style="text-align: center">Categoria</th>
+      <th style="text-align: center">Aplica el descuento</th>
+      {% if not session=='Usuario externo' %}
+        <th style="text-align: center"># de Ventas</th>
+        <th style="text-align: center">Total de ventas</th>
+        <th style="text-align: center">Total descontado</th>
+        <th style="text-align: center">Dado de Baja</th>
+      {%endif%}
+    </thead>
+    <tbody style="text-align: center">
     {% for r in row %}
     <tr>
       <td style="text-align: center">{{ r ["id_producto"] }}</td>
@@ -36,11 +38,12 @@
       <td style="text-align: center">{{ r ["calificacion"] }}</td>
       <td style="text-align: center">{{ r ["categoria"] }}</td>
       <td style="text-align: center">{{ "Si" if(r ["aplica_descuento"]) else "No" }}</td>
-      <!-- Condicional de sesión-->
-      <td style="text-align: center">{{ r ["num_ventas"] }}</td>
-      <td style="text-align: center">{{ r ["total_ventas"] }}</td>
-      <td style="text-align: center">{{ r ["acum_descontado"] }}</td>
-      <td style="text-align: center">{{ r ["baja"] }}</td>
+      {% if not session=='Usuario externo' %}
+        <td style="text-align: center">{{ r ["num_ventas"] }}</td>
+        <td style="text-align: center">{{ r ["total_ventas"] }}</td>
+        <td style="text-align: center">{{ r ["acum_descontado"] }}</td>
+        <td style="text-align: center">{{ r ["baja"] }}</td>
+      {% endif %}
     </tr>
     {% endfor %}
   </tbody>

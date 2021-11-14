@@ -59,6 +59,7 @@ def gestion_productos():
 
 @app.route("/gestion_productos/consulta", methods=["GET", "POST"])
 def gestion_productos_consulta():
+    global session
     form = producto()
     nombre_producto = str(form.nombre_producto.data)
     id_producto = str(form.id_producto.data)
@@ -69,28 +70,27 @@ def gestion_productos_consulta():
             cur.execute("SELECT * FROM productos")
             row = cur.fetchall()
             rowtemp = []
-
+            print("ROL= " + session['rol'])
             if(nombre_producto == '' and id_producto == 'None'):
 
-                return render_template('consulta_productos.html', form=form, titulo="Gestión de Productos", row=row)
+                return render_template('consulta_productos.html', form=form, titulo="Gestión de Productos", row=row,session=session['rol'])
             elif(nombre_producto == ""):
 
                 for r in row:
                     if (id_producto in str(r['id_producto'])):
                         rowtemp.append(r)
-                return render_template('consulta_productos.html', form=form, titulo="Gestión de Productos", row=rowtemp)
+                return render_template('consulta_productos.html', form=form, titulo="Gestión de Productos", row=rowtemp,session=session['rol'])
             elif(id_producto=="None"):
 
                 for r in row:
                     if(nombre_producto in r['nombre_producto']):
                         rowtemp.append(r)
-                return render_template('consulta_productos.html', form=form, titulo="Gestión de Productos", row=rowtemp)
+                return render_template('consulta_productos.html', form=form, titulo="Gestión de Productos", row=rowtemp,session=session['rol'])
             else:
                 for r in row:
                     if(nombre_producto in r['nombre_producto'] and id_producto in str(r['id_producto'])):
-                        print("Pasa if interno nombre y ID llenos")
                         rowtemp.append(r)
-                return render_template('consulta_productos.html', form=form, titulo="Gestión de Productos", row=rowtemp)                
+                return render_template('consulta_productos.html', form=form, titulo="Gestión de Productos", row=rowtemp,session=session['rol'])                
 
     except Error:
         print(Error)
@@ -129,7 +129,7 @@ def gestion_productos_creacion():
             print(Error)
             con.rollback()
             mensaje = "Ocurrió un error con el guardado del producto"
-        return render_template('crear_productos.html', form=form, titulo="Gestión de Productos", mensaje=mensaje)
+        return render_template('crear_productos.html', form=form, titulo="Gestión de Productos", mensaje=mensaje,session=session['rol'])
 
 
 @app.route("/gestion_productos/actualizar", methods=["GET", "POST"])
@@ -158,7 +158,7 @@ def gestion_productos_actualizar():
             print(Error)
             con.rollback()
             mensaje = "Ocurrió un error con la actualización del producto"
-        return render_template('crear_productos.html', form=form, titulo="Gestión de Productos", mensaje=mensaje)
+        return render_template('crear_productos.html', form=form, titulo="Gestión de Productos", mensaje=mensaje,session=session['rol'])
 
 
 @app.route("/gestion_productos/eliminar", methods=["GET", "POST"])
@@ -179,7 +179,8 @@ def gestion_productos_eliminar():
             print(Error)
             mensaje = "Error"
     
-    return render_template('crear_productos.html', form=form, titulo="Gestión de Productos", mensaje=mensaje)
+    print(session['rol'])
+    return render_template('crear_productos.html', form=form, titulo="Gestión de Productos", mensaje=mensaje,session=session['rol'])
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
