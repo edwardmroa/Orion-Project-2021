@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block contenido %}
+ 
+  <div class="container" style="margin-bottom: 128px;">
+      <div class="row">
+          <h2 class="center-align">Lista de comentarios</h2>
+          <form action="" method="post" class="center-align">
+            {{ form.hidden_tag() }}
+            <p>
+              {{ form.busqueda(size=30) }}<br />
+            </p>
+            <p>{{ form.filtro.label }} 
+              {{ form.filtro(class="browser-default") }}</p>
+              <p>{{ form.rangoMaximo.label }} 
+                {{ form.rangoMaximo }}</p>
+                <p>{{ form.rangoMinimo.label }} 
+                  {{ form.rangoMinimo }}</p>
+            <p>{{ form.enviar(class_="waves-effect waves-light btn") }}</p>
+          </form>
+          <div class="col s12">
+              <table class="striped">
+                  <thead>
+                      <tr> 
+                        <th data-field="producto">ID producto</th>
+                          <th data-field="idComentario">ID comentario</th>
+                          <th data-field="idUsuario">ID usuario</th> 
+                          <th data-field="Calificacion">Calificacion</th>
+                          <th data-field="Comentario">Comentario</th>                         
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {% for us in comentarios %}
+                    <tr>
+                      <td ><a href="/producto/{{ us[2] }}">{% print(us[2]) %}</a></td>
+                      <td >{% print(us[0]) %}</td> 
+                      <td >{% print(us[1]) %}</td> 
+                      <td >{% print(us[3]) %}</td>  
+                      <td >{% print(us[4]) %}</td>
+                      <td>
+                        <a href="/dashboard/comentarios/{{ us[0] }}/delete"><i class="zmdi zmdi-delete zmdi-hc-lg"></i></a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+  {% endblock %}

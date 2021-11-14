@@ -97,3 +97,9 @@ class lote(FlaskForm):
     eliminar = SubmitField( 'Eliminar', render_kw={"onmouseover": "eliminarLote()", "class":"form_boton"})
     actualizar = SubmitField( 'Actualizar', render_kw={"onmouseover": "actualizarLote()","class":"form_boton"})
     crear = SubmitField( 'Crear', render_kw={"onmouseover": "crearLote()","class":"form_boton"})
+class Comentarios(FlaskForm):
+    busqueda = StringField('', render_kw = {"placeholder": "Escribe el parametro a buscar segun el filtro espeficado"})
+    filtro = SelectField(u'Buscar por:', choices=[('Codigo', 'Codigo'), ('Nombre', 'Nombre'), ('Calificación', 'Calificación')])
+    rangoMinimo = IntegerField('Valor minimo',render_kw={"placeholder":"Ingrese el rango minimo de la calificacion","min":"0", "max":"5"})
+    rangoMaximo = IntegerField('Valor maximo',render_kw={"placeholder":"Ingrese el rango maximo de la calificacion", "min":"0", "max":"5"})
+    enviar = SubmitField('Buscar')

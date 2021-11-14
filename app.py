@@ -3,7 +3,7 @@ import sqlite3
 from sqlite3 import Error
 from flask import Flask, render_template, flash, request, redirect, url_for, session, send_file, current_app, g
 from wtforms.validators import Length
-from formulario import RegistroComprador, producto, Login, PerfilUsuario, formularioLogin, formularioRegistro, CambioPassword, EliminarCuenta, RegistrarOperario, ListarOperarios, lote
+from formulario import RegistroComprador, producto, Login, PerfilUsuario, formularioLogin, formularioRegistro, CambioPassword, EliminarCuenta, RegistrarOperario, ListarOperarios, lote,Comentarios
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from db import get_db, close_db
@@ -17,7 +17,7 @@ app.config['SECRET_KEY'] = SECRET_KEY
 
 @app.route("/", methods=["GET", "POST"])
 def dashboard(): 
-    return redirect( url_for("login"))
+    return render_template('Home.html')
 
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
@@ -575,6 +575,67 @@ def dashboardUsuarioInterno( ):
     else:
         return redirect( url_for( 'dashboard' ) ) 
 
+@app.route('/dashboard/comentarios', methods=('GET', 'POST'))
+def dashboardComentarios( ): 
+    if 'user_id' in session:
+        if session['rol'] != 'Usuario externo':
+            form = Comentarios()
+            form.rangoMaximo.default = 5
+            form.rangoMinimo.default = 0
+            db = get_db()
+            comentarios = db.execute( 'SELECT * FROM comentarios').fetchall()
+            db = close_db()
+            if request.method=='POST': 
+                parametro = request.form['busqueda']
+                filtro = request.form['filtro']
+                if parametro.isdigit() and filtro=="Codigo":
+                    for us in reversed(comentarios):
+                        codigoProducto = str(us[2])
+                        if not parametro in codigoProducto:
+                            comentarios.remove(us)
+                elif parametro.isdigit() and filtro=="Calificación":
+                    for us in reversed(comentarios):
+                        calificacion = int(us[3])
+                        if int(parametro) != calificacion:
+                            comentarios.remove(us)
+                elif (not parametro.isdigit()) and filtro=="Calificación":
+                        for us in reversed(comentarios):
+                            calificacion = int(us[3])
+                            max = int(request.form['rangoMaximo'])
+                            min = int(request.form['rangoMinimo'])
+                            if calificacion < min or calificacion > max:
+                                comentarios.remove(us)
+                elif parametro and filtro=="Nombre":
+                    nombres = list()
+                    i = 0
+                    db = get_db()
+                    for us in reversed(comentarios):
+                        nombre = db.execute( 'SELECT nombre_producto FROM productos WHERE id_producto=?',(us[2],)).fetchall()
+                        if nombre:
+                            nombres.append(nombre[0][0])
+                            if not parametro in nombres[i]:
+                                comentarios.remove(us)
+                        i += 1
+            return render_template('dashboard_comentarios.html', comentarios = comentarios, form=form)
+        return redirect( url_for( 'dashboard' ) )
+    else:
+        return redirect( url_for( 'dashboard' ) ) 
+
+@app.route('/dashboard/comentarios/<id>/delete', methods=('GET', 'POST'))
+def eliminarComentario(id): 
+    if 'user_id' in session:
+        if session['rol'] != 'Usuario externo':    
+            if request.method == 'POST':
+                db = get_db()
+                db.execute("DELETE FROM comentarios WHERE id_comentario = ?",(id,))
+                db.commit()
+                db.close()
+                return redirect( url_for( 'dashboardComentarios' ) )
+            return render_template('eliminarComentario.html', id=id, titulo='Eliminar comentario')
+        return redirect( url_for( 'dashboard' ) ) 
+    else:
+        return redirect( url_for( 'dashboard' ) ) 
+
 @app.route('/dashboard/internos/<id>/delete', methods=('GET', 'POST'))
 def eliminarPerfilOperario(id): 
     if 'user_id' in session:
@@ -594,6 +655,27 @@ def eliminarPerfilOperario(id):
     else:
         return redirect( url_for( 'dashboard' ) ) 
 
+@app.route("/producto/<id>", methods=["GET", "POST"])
+def productoDetalle(id): 
+    db = get_db()
+    nombre = db.execute('SELECT nombre_producto, precio,unidad FROM productos WHERE id_producto = ?', (id,)).fetchall()
+    listadoComentarios = db.execute('SELECT * FROM comentarios WHERE id_producto = ?',(id,)).fetchall()
+    if len(nombre)>0:
+        if request.method == 'POST' and 'user_id' in session:
+            db.execute("INSERT into comentarios (id_usuario,id_producto,calificacion,comentario) VALUES(?,?,?,?)",(session['user_id'], id, request.form['rate'], request.form['comentario']))
+            db.commit()    
+        nombre = nombre[0]
+        nombres = list()
+        if len(listadoComentarios)>0:
+            for com in listadoComentarios:
+                consulta = db.execute('SELECT username FROM usuarios WHERE id_usuario = ?', (com[1],)).fetchall()
+                nombres.append(consulta[0][0])
+        db.close()
+        return render_template('productdesc.html', product = nombre, comentario=listadoComentarios, usuarios = nombres)
+    else:
+        db.close()
+        return redirect( url_for( 'dashboard' ) ) 
+        
 @app.route( '/logout' )
 def logout():
     session.clear()
